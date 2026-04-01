@@ -8,10 +8,24 @@ const rateLimit = require('express-rate-limit');
 dotenv.config();
 
 // Verify critical env vars
-if (!process.env.JWT_SECRET) {
-  console.error('FATAL ERROR: JWT_SECRET is not defined.');
+const requiredEnvVars = ['DATABASE_URL', 'JWT_SECRET'];
+requiredEnvVars.forEach(varName => {
+  if (!process.env[varName]) {
+    console.error(`FATAL ERROR: ${varName} is not defined.`);
+  }
+});
+
+if (!process.env.JWT_SECRET || !process.env.DATABASE_URL) {
   process.exit(1);
 }
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err);
+});
 
 const app = express();
 
