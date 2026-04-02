@@ -6,10 +6,20 @@ const ws = require('ws');
 
 neonConfig.webSocketConstructor = ws;
 
-const connectionString = `${process.env.DATABASE_URL}`;
+const connectionString = process.env.DATABASE_URL;
+
+if (!connectionString) {
+  console.error('DATABASE_URL is missing!');
+} else {
+  const maskedUrl = connectionString.replace(/:[^:@]+@/, ':****@');
+  console.log('Initializing Prisma with connection string:', maskedUrl);
+}
 
 const pool = new Pool({ connectionString });
 const adapter = new PrismaNeon(pool);
-const prisma = new PrismaClient({ adapter });
+const prisma = new PrismaClient({ 
+  adapter,
+  log: ['query', 'info', 'warn', 'error']
+});
 
 module.exports = prisma;
