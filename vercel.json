@@ -11,10 +11,10 @@
       "use": "@vercel/node",
       "config": {
         "includeFiles": [
-          "../node_modules/@prisma/client/runtime/*.js",
-          "../node_modules/@prisma/client/runtime/*.mjs",
-          "../node_modules/.prisma/client/runtime/*.js",
-          "../node_modules/.prisma/client/runtime/*.mjs"
+          "node_modules/@prisma/client/runtime/*.js",
+          "node_modules/@prisma/client/runtime/*.mjs",
+          "node_modules/.prisma/client/runtime/*.js",
+          "node_modules/.prisma/client/runtime/*.mjs"
         ]
       }
     }
