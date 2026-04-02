@@ -9,11 +9,11 @@ neonConfig.webSocketConstructor = ws;
 const connectionString = process.env.DATABASE_URL;
 
 if (!connectionString) {
-  throw new Error('DATABASE_URL environment variable is missing on Vercel. Please add it to your Project Settings.');
+  throw new Error('FATAL: DATABASE_URL is undefined in process.env!');
 }
 
-const maskedUrl = connectionString.replace(/:[^:@]+@/, ':****@');
-console.log('Initializing Prisma with connection string:', maskedUrl);
+const maskedUrl = connectionString.substring(0, 15) + '...' + connectionString.substring(connectionString.length - 10);
+console.log(`Prisma Init: URL Length=${connectionString.length}, Preview="${maskedUrl}"`);
 
 const pool = new Pool({ connectionString });
 const adapter = new PrismaNeon(pool);
