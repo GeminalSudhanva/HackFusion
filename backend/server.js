@@ -16,7 +16,7 @@ requiredEnvVars.forEach(varName => {
 });
 
 if (!process.env.JWT_SECRET || !process.env.DATABASE_URL) {
-  process.exit(1);
+  console.warn('WARNING: JWT_SECRET or DATABASE_URL is not defined. Some features may fail.');
 }
 
 process.on('unhandledRejection', (reason, promise) => {
