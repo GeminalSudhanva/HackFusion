@@ -9,11 +9,11 @@ neonConfig.webSocketConstructor = ws;
 const connectionString = process.env.DATABASE_URL;
 
 if (!connectionString) {
-  throw new Error('FATAL: DATABASE_URL is undefined in process.env!');
+  console.error('DATABASE_URL is missing!');
+} else {
+  const maskedUrl = connectionString.substring(0, 15) + '...';
+  console.log('Initializing Prisma with masked URL:', maskedUrl);
 }
-
-const maskedUrl = connectionString.substring(0, 15) + '...' + connectionString.substring(connectionString.length - 10);
-console.log(`Prisma Init: URL Length=${connectionString.length}, Preview="${maskedUrl}"`);
 
 const pool = new Pool({ connectionString });
 const adapter = new PrismaNeon(pool);

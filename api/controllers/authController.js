@@ -87,11 +87,7 @@ const loginUser = async (req, res) => {
     }
   } catch (error) {
     console.error('Login Error:', error);
-    res.status(500).json({ 
-      message: 'Server Error', 
-      error: error.message,
-      stack: process.env.NODE_ENV === 'production' ? undefined : error.stack 
-    });
+    res.status(500).json({ message: 'Server Error' });
   }
 };
 
