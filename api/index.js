@@ -54,12 +54,12 @@ const authLimiter = rateLimit({
 
 
 // Routes
-app.use('/api', require('./routes/api'));
-app.use('/api/auth', authLimiter, require('./routes/authRoutes'));
-app.use('/api/team', require('./routes/teamRoutes'));
+app.use('/api', require('../server/routes/api'));
+app.use('/api/auth', authLimiter, require('../server/routes/authRoutes'));
+app.use('/api/team', require('../server/routes/teamRoutes'));
 
-app.use('/api/registration', require('./routes/registrationRoutes'));
-app.use('/api/admin', require('./routes/adminRoutes'));
+app.use('/api/registration', require('../server/routes/registrationRoutes'));
+app.use('/api/admin', require('../server/routes/adminRoutes'));
 
 // Global Error Handler
 app.use((err, req, res, next) => {
