@@ -61,6 +61,16 @@ app.use('/api/team', require('./routes/teamRoutes'));
 app.use('/api/registration', require('./routes/registrationRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
 
+// Global Error Handler
+app.use((err, req, res, next) => {
+  console.error('Express Error Catch:', err);
+  res.status(500).json({ 
+    message: 'Server Error', 
+    error: err.message,
+    stack: process.env.NODE_ENV === 'production' ? null : err.stack
+  });
+});
+
 
 const PORT = process.env.PORT || 5000;
 
