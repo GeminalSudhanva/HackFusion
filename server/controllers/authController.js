@@ -52,7 +52,8 @@ const registerUser = async (req, res) => {
       res.status(400).json({ message: 'Invalid user data received' });
     }
   } catch (error) {
-    res.status(500).json({ message: 'Server Error' });
+    console.error('Signup Error:', error);
+    res.status(500).json({ message: 'Server Error', detail: error.message });
   }
 };
 
@@ -87,7 +88,7 @@ const loginUser = async (req, res) => {
     }
   } catch (error) {
     console.error('Login Error:', error);
-    res.status(500).json({ message: 'Server Error' });
+    res.status(500).json({ message: 'Server Error', detail: error.message });
   }
 };
 

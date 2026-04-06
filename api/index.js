@@ -64,7 +64,7 @@ app.use('/api/admin', require('../server/routes/adminRoutes'));
 // Global Error Handler
 app.use((err, req, res, next) => {
   console.error('Express Error Catch:', err);
-  res.status(500).json({ message: 'Server Error' });
+  res.status(500).json({ message: 'Server Error', detail: err.message });
 });
 
 
