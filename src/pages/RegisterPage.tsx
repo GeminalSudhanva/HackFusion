@@ -11,10 +11,7 @@ import { Brain, Globe, Layers, Link2, Cpu, CreditCard, CheckCircle2, QrCode, Arr
 
 const DOMAINS = [
   { value: "AI/ML", label: "AI / ML", icon: Brain },
-  { value: "Web Development", label: "Web Development", icon: Globe },
   { value: "Full Stack Development", label: "Full Stack Development", icon: Layers },
-  { value: "Blockchain", label: "Blockchain", icon: Link2 },
-  { value: "IoT", label: "IoT", icon: Cpu },
 ] as const;
 
 export default function RegisterPage() {

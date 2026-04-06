@@ -28,10 +28,12 @@ model User {
 model Team {
   id         String   @id @default(uuid())
   teamName   String
-  teamCode   String   @unique
-  maxSize    Int      @default(4)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  teamCode         String   @unique
+  maxSize          Int      @default(4)
+  foodScans        Int      @default(0)
+  problemStatement Int?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
   leaderId     String
   leader       User     @relation("TeamLeader", fields: [leaderId], references: [id])

@@ -74,6 +74,14 @@ export const API = {
     if (!res.ok) throw new Error((await res.json()).message || 'Failed to fetch team details');
     return res.json();
   },
+  rollDice: async () => {
+    const res = await fetch(`${BASE_URL}/team/roll-dice`, {
+      method: 'POST',
+      headers: getHeaders(),
+    });
+    if (!res.ok) throw new Error((await res.json()).message || 'Failed to roll dice');
+    return res.json();
+  },
 
   // --- Hackathon Registration ---
   registerTeam: async (data: any) => {
@@ -105,6 +113,14 @@ export const API = {
       headers: getHeaders(),
     });
     if (!res.ok) throw new Error((await res.json()).message || 'Admin fetch failed');
+    return res.json();
+  },
+  adminScanFood: async (teamId: string) => {
+    const res = await fetch(`${BASE_URL}/admin/scan-food/${teamId}`, {
+      method: 'POST',
+      headers: getHeaders(),
+    });
+    if (!res.ok) throw new Error((await res.json()).message || 'Admin scan failed');
     return res.json();
   },
 };

@@ -34,10 +34,7 @@ function useCountdown(target: Date) {
 
 const domains = [
   { icon: Brain, label: "AI / ML", desc: "Build intelligent machine learning models and predictive AI systems." },
-  { icon: Globe, label: "Web Development", desc: "Create stunning, responsive, and dynamic web applications." },
   { icon: Layers, label: "Full Stack Development", desc: "End-to-end robust application development linking front to back." },
-  { icon: Link2, label: "Blockchain", desc: "Architect decentralized applications and custom smart contracts." },
-  { icon: Cpu, label: "IoT", desc: "Connect the physical world using smart interconnected devices." },
 ];
 
 const rules = [

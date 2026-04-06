@@ -53,6 +53,8 @@ export default function AdminDashboard() {
                 <TableHead>Members</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Domain</TableHead>
+                <TableHead>Problem</TableHead>
+                <TableHead>Food Scans</TableHead>
                 <TableHead className="text-right">Payment</TableHead>
               </TableRow>
             </TableHeader>
@@ -62,7 +64,7 @@ export default function AdminDashboard() {
                   <TableCell className="font-medium">
                     <div className="flex flex-col">
                       <span>{team.teamName}</span>
-                      <span className="text-xs text-muted-foreground">Code: {team.teamCode}</span>
+                      <span className="text-[10px] text-muted-foreground uppercase mt-1">ID: {team.id.substring(0,8)}...</span>
                     </div>
                   </TableCell>
                   <TableCell>
@@ -75,38 +77,62 @@ export default function AdminDashboard() {
                         <Mail className="h-3 w-3" />
                         {team.leader.email}
                       </div>
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <Phone className="h-3 w-3" />
-                        {team.leader.phone}
-                      </div>
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Badge variant="outline" className="font-normal">
+                    <Badge variant="outline" className="font-normal text-[10px]">
                       {team.members.length} / {team.maxSize}
                     </Badge>
                   </TableCell>
                   <TableCell>
                     {team.registration ? (
-                      <Badge variant="default" className="bg-green-500/10 text-green-500 border-green-500/20 gap-1 capitalize">
+                      <Badge variant="default" className="bg-green-500/10 text-green-500 border-green-500/20 gap-1 capitalize text-[10px]">
                         <CheckCircle2 className="h-3 w-3" />
                         {team.registration.status}
                       </Badge>
                     ) : (
-                      <Badge variant="outline" className="text-muted-foreground gap-1">
+                      <Badge variant="outline" className="text-muted-foreground gap-1 text-[10px]">
                         <Clock className="h-3 w-3" />
-                        Not Started
+                        Not Reg.
                       </Badge>
                     )}
                   </TableCell>
                   <TableCell>
-                    {team.registration?.domain || <span className="text-muted-foreground text-sm">—</span>}
+                    {team.registration?.domain === 'AI/ML' ? (
+                      <Badge variant="secondary" className="bg-blue-500/10 text-blue-400 border-blue-500/20 text-[10px]">AI/ML</Badge>
+                    ) : team.registration?.domain ? (
+                      <Badge variant="secondary" className="bg-purple-500/10 text-purple-400 border-purple-500/20 text-[10px]">Fullstack</Badge>
+                    ) : (
+                      <span className="text-muted-foreground text-xs">—</span>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {team.problemStatement ? (
+                      <div className="flex items-center gap-2">
+                         <span className="text-white font-bold bg-primary/20 px-2 py-0.5 rounded border border-primary/30 text-xs">#{team.problemStatement}</span>
+                      </div>
+                    ) : (
+                      <span className="text-muted-foreground text-xs">Not Rolled</span>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                       <div className="w-full bg-secondary/50 h-1.5 rounded-full overflow-hidden min-w-[60px]">
+                          <div 
+                            className={`h-full ${team.foodScans >= 4 ? 'bg-destructive' : 'bg-primary'}`} 
+                            style={{ width: `${(team.foodScans / 4) * 100}%` }}
+                          ></div>
+                       </div>
+                       <span className={`text-[10px] font-bold ${team.foodScans >= 4 ? 'text-destructive' : 'text-white'}`}>
+                          {team.foodScans}/4
+                       </span>
+                    </div>
                   </TableCell>
                   <TableCell className="text-right">
                     {team.registration ? (
-                      <div className="flex flex-col items-end">
+                      <div className="flex flex-col items-end gap-1">
                         <Badge 
-                          className={`gap-1 capitalize ${
+                          className={`text-[10px] gap-1 capitalize ${
                             team.registration.paymentStatus === 'verified' 
                               ? 'bg-green-500/10 text-green-500' 
                               : team.registration.paymentStatus === 'pending'
@@ -116,7 +142,9 @@ export default function AdminDashboard() {
                         >
                           {team.registration.paymentStatus}
                         </Badge>
-                        <span className="text-[10px] text-muted-foreground mt-1">UTR: {team.registration.utrNumber}</span>
+                        {team.registration.utrNumber && (
+                          <span className="text-[9px] text-muted-foreground">UTR: {team.registration.utrNumber}</span>
+                        )}
                       </div>
                     ) : (
                       <span className="text-muted-foreground text-sm">—</span>
@@ -126,8 +154,8 @@ export default function AdminDashboard() {
               ))}
               {teams?.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-12 text-muted-foreground">
-                    No teams have been created yet.
+                  <TableCell colSpan={8} className="text-center py-12 text-muted-foreground text-sm italic">
+                    No teams registered yet.
                   </TableCell>
                 </TableRow>
               )}

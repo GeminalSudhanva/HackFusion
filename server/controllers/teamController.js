@@ -288,10 +288,84 @@ const getMyTeam = async (req, res) => {
   }
 };
 
+// @desc    Roll for problem statement
+// @route   POST /api/team/roll-dice
+// @access  Private (Leader only)
+const rollDice = async (req, res) => {
+  try {
+    const leaderId = req.user.id;
+
+    // 1. Get team and its registration
+    const team = await prisma.team.findFirst({
+      where: { leaderId },
+      include: { registration: true },
+    });
+
+    if (!team) {
+      return res.status(403).json({ message: 'Only the team leader can roll the dice' });
+    }
+
+    if (!team.registration || team.registration.status !== 'registered') {
+      return res.status(400).json({ message: 'Your team must be fully registered to roll the dice' });
+    }
+
+    if (team.problemStatement !== null) {
+      return res.status(400).json({ message: 'You have already rolled the dice' });
+    }
+
+    const domain = team.registration.domain;
+
+    // 2. Find available numbers (1-15) for this domain
+    // A number is available if it has been assigned < 2 times in the SAME domain
+    const assignedTeams = await prisma.team.findMany({
+      where: {
+        registration: { domain: domain },
+        problemStatement: { not: null },
+      },
+      select: { problemStatement: true },
+    });
+
+    const frequencyMap = {};
+    assignedTeams.forEach((t) => {
+      frequencyMap[t.problemStatement] = (frequencyMap[t.problemStatement] || 0) + 1;
+    });
+
+    const availableNumbers = [];
+    for (let i = 1; i <= 15; i++) {
+      if ((frequencyMap[i] || 0) < 2) {
+        availableNumbers.push(i);
+      }
+    }
+
+    if (availableNumbers.length === 0) {
+      return res.status(400).json({ message: 'No problem statements available for this domain' });
+    }
+
+    // 3. Pick random available number
+    const randomIndex = Math.floor(Math.random() * availableNumbers.length);
+    const chosenNumber = availableNumbers[randomIndex];
+
+    await prisma.team.update({
+      where: { id: team.id },
+      data: { problemStatement: chosenNumber },
+    });
+
+    res.status(200).json({ 
+      message: 'Problem statement assigned', 
+      problemStatement: chosenNumber,
+      domain: domain 
+    });
+  } catch (error) {
+    console.error('Roll Dice Error:', error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
 module.exports = {
   createTeam,
   joinTeamViaCode,
   sendJoinRequest,
   respondToRequest,
   getMyTeam,
+  rollDice,
 };
