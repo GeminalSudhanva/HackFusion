@@ -192,10 +192,12 @@ export default function LandingPage() {
             <div className="w-24 h-1 bg-gradient-to-r from-primary to-transparent mx-auto rounded-full" />
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 max-w-7xl mx-auto">
+          <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-8 max-w-5xl mx-auto">
             {domains.map((d, i) => (
               <motion.div key={d.label} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "0px" }} variants={fadeUp} custom={i}
-                className="glass-card p-8 rounded-2xl bg-secondary/20 hover:bg-secondary/40 border border-border hover:border-primary/50 transition-all duration-300 group flex flex-col items-center text-center hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(56,189,248,0.2)]">
+                whileHover={{ scale: 1.05, y: -10 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                className="glass-card p-10 rounded-2xl bg-secondary/20 border border-white/5 hover:border-primary/50 group flex flex-col items-center text-center shadow-xl hover:shadow-[0_0_50px_-15px_rgba(56,189,248,0.4)] w-full sm:w-[calc(50%-1rem)] max-w-[420px]">
                 <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-primary/20 transition-all duration-500">
                   <d.icon className="h-8 w-8 text-primary group-hover:drop-shadow-[0_0_10px_rgba(56,189,248,0.8)]" />
                 </div>
