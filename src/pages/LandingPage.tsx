@@ -267,53 +267,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 5. MEET THE TEAM Section */}
-      <section className="py-24 relative bg-secondary/10">
-        <div className="container mx-auto px-4">
-          <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-50px" }} variants={fadeUp} custom={0} className="text-center mb-16">
-            <h2 className="font-display text-4xl md:text-5xl font-bold mb-4 tracking-tight">
-              Meet the Team
-            </h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-primary to-transparent mx-auto rounded-full" />
-          </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {/* Sanjeev */}
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={1} className="glass-card p-6 rounded-2xl flex flex-col items-center text-center hover:-translate-y-2 transition-transform duration-300">
-              <div className="w-32 h-32 rounded-full bg-secondary overflow-hidden mb-6 border-2 border-primary/30 flex items-center justify-center shadow-lg">
-                {/* PHOTO PLACEHOLDER */}
-                {/* Replace the span below with: <img src="/sanjeev.jpg" alt="Sanjeev" className="w-full h-full object-cover" /> */}
-                <span className="text-xs text-muted-foreground uppercase tracking-wider text-center px-2">Sanjeev<br/>Photo</span>
-              </div>
-              <h3 className="font-display text-xl font-bold text-foreground">Sanjeev</h3>
-              <p className="text-primary font-medium mb-2">Frontend Dev</p>
-              <p className="text-sm text-muted-foreground">Co-lead, OS Code AGMR Chapter</p>
-            </motion.div>
-
-            {/* Sudhanva */}
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={2} className="glass-card p-6 rounded-2xl flex flex-col items-center text-center hover:-translate-y-2 transition-transform duration-300">
-              <div className="w-32 h-32 rounded-full bg-secondary overflow-hidden mb-6 border-2 border-primary/30 flex items-center justify-center shadow-lg">
-                {/* PHOTO PLACEHOLDER */}
-                {/* Replace the span below with: <img src="/sudhanva.jpg" alt="Sudhanva" className="w-full h-full object-cover" /> */}
-                <span className="text-xs text-muted-foreground uppercase tracking-wider text-center px-2">Sudhanva<br/>Photo</span>
-              </div>
-              <h3 className="font-display text-xl font-bold text-foreground">Sudhanva</h3>
-              <p className="text-primary font-medium mb-2">Backend Dev</p>
-            </motion.div>
-
-            {/* Shrusti */}
-            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={3} className="glass-card p-6 rounded-2xl flex flex-col items-center text-center hover:-translate-y-2 transition-transform duration-300">
-              <div className="w-32 h-32 rounded-full bg-secondary overflow-hidden mb-6 border-2 border-primary/30 flex items-center justify-center shadow-lg">
-                {/* PHOTO PLACEHOLDER */}
-                {/* Replace the span below with: <img src="/shrusti.jpg" alt="Shrusti" className="w-full h-full object-cover" /> */}
-                <span className="text-xs text-muted-foreground uppercase tracking-wider text-center px-2">Shrusti<br/>Photo</span>
-              </div>
-              <h3 className="font-display text-xl font-bold text-foreground">Shrusti</h3>
-              <p className="text-primary font-medium mb-2">UI/UX Developer</p>
-            </motion.div>
-          </div>
-        </div>
-      </section>
 
       {/* 6. VENUE Map Section */}
       <section className="py-24">
@@ -359,10 +313,13 @@ export default function LandingPage() {
       </section>
 
       {/* Micro Footer */}
-      <footer className="py-6 border-t border-border/40 bg-background text-center relative z-20">
+      <footer className="py-6 border-t border-border/40 bg-background text-center relative z-20 flex flex-col items-center gap-2">
         <p className="text-white/40 text-sm font-medium tracking-wide">
           © 2026 AGRATA 2K26 — HackFusion 2.0. All rights reserved.
         </p>
+        <Link to="/about" className="text-white/30 hover:text-primary text-xs transition-colors">
+          Platform Developers
+        </Link>
       </footer>
 
     </div>
