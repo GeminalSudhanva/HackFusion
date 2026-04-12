@@ -24,9 +24,7 @@ export default function AboutPage() {
             {/* Sanjeev */}
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={1} className="glass-card p-6 rounded-2xl flex flex-col items-center text-center hover:-translate-y-2 transition-transform duration-300">
               <div className="w-32 h-32 rounded-full bg-secondary overflow-hidden mb-6 border-2 border-primary/30 flex items-center justify-center shadow-lg">
-                {/* PHOTO PLACEHOLDER */}
-                {/* Replace the span below with: <img src="/sanjeev.jpg" alt="Sanjeev" className="w-full h-full object-cover" /> */}
-                <span className="text-xs text-muted-foreground uppercase tracking-wider text-center px-2">Sanjeev<br/>Photo</span>
+                <img src="/sanjeev.jpeg" alt="Sanjeev" className="w-full h-full object-cover" />
               </div>
               <h3 className="font-display text-xl font-bold text-foreground">Sanjeev</h3>
               <p className="text-primary font-medium mb-2">Frontend Dev</p>
@@ -36,9 +34,7 @@ export default function AboutPage() {
             {/* Sudhanva */}
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={2} className="glass-card p-6 rounded-2xl flex flex-col items-center text-center hover:-translate-y-2 transition-transform duration-300">
               <div className="w-32 h-32 rounded-full bg-secondary overflow-hidden mb-6 border-2 border-primary/30 flex items-center justify-center shadow-lg">
-                {/* PHOTO PLACEHOLDER */}
-                {/* Replace the span below with: <img src="/sudhanva.jpg" alt="Sudhanva" className="w-full h-full object-cover" /> */}
-                <span className="text-xs text-muted-foreground uppercase tracking-wider text-center px-2">Sudhanva<br/>Photo</span>
+                <img src="/sudhanva.jpeg" alt="Sudhanva" className="w-full h-full object-cover" />
               </div>
               <h3 className="font-display text-xl font-bold text-foreground">Sudhanva</h3>
               <p className="text-primary font-medium mb-2">Backend Dev</p>
@@ -47,9 +43,7 @@ export default function AboutPage() {
             {/* Shrusti */}
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={3} className="glass-card p-6 rounded-2xl flex flex-col items-center text-center hover:-translate-y-2 transition-transform duration-300">
               <div className="w-32 h-32 rounded-full bg-secondary overflow-hidden mb-6 border-2 border-primary/30 flex items-center justify-center shadow-lg">
-                {/* PHOTO PLACEHOLDER */}
-                {/* Replace the span below with: <img src="/shrusti.jpg" alt="Shrusti" className="w-full h-full object-cover" /> */}
-                <span className="text-xs text-muted-foreground uppercase tracking-wider text-center px-2">Shrusti<br/>Photo</span>
+                <img src="/Shrusti.jpeg" alt="Shrusti" className="w-full h-full object-cover" />
               </div>
               <h3 className="font-display text-xl font-bold text-foreground">Shrusti</h3>
               <p className="text-primary font-medium mb-2">UI/UX Developer</p>
