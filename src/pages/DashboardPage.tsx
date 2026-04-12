@@ -196,8 +196,18 @@ export default function DashboardPage() {
                     <p className="text-sm font-bold text-white flex items-center justify-center gap-2">
                        <Utensils className="w-4 h-4 text-primary" /> Food Service QR
                     </p>
-                    <div className="bg-white p-4 rounded-2xl inline-block shadow-2xl shadow-primary/20 relative">
-                       <QRCodeSVG value={scanLink} size={160} level="H" includeMargin />
+                    <div 
+                      className="bg-white p-4 rounded-2xl inline-block shadow-2xl shadow-primary/20 relative"
+                      style={{ colorScheme: "light" }} // Prevents mobile browser dark-mode overriding the SVG colors
+                    >
+                       <QRCodeSVG 
+                         value={scanLink || window.location.origin} 
+                         size={160} 
+                         level="H" 
+                         includeMargin 
+                         fgColor="#000000" 
+                         bgColor="#FFFFFF"
+                       />
                        <div className="absolute inset-x-0 bottom-[-10px] flex justify-center">
                           <span className="bg-primary text-background text-[10px] font-black px-3 py-1 rounded-full uppercase">Scan for Meal</span>
                        </div>
