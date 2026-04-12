@@ -48,7 +48,7 @@ const steps = [
   { id: 1, title: "Register Individually", desc: "Create an account on our platform specifying your native college details.", icon: UserPlus },
   { id: 2, title: "Form Your Squad", desc: "Create a new team via the dashboard or join an existing one using an invite code.", icon: Users },
   { id: 3, title: "Link Up", desc: "Use the uniquely generated 6-character secret code to securely bind members into teams.", icon: Link2 },
-  { id: 4, title: "Leader Registration", desc: "The designated team leader then officially submits the team into one of the 5 hackathon domains.", icon: ShieldCheck },
+  { id: 4, title: "Leader Registration", desc: "The designated team leader then officially submits the team into one of the 2 hackathon domains.", icon: ShieldCheck },
 ];
 
 // Reusable standard viewport animation mapping
