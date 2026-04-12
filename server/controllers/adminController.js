@@ -66,8 +66,35 @@ const scanFoodTeam = async (req, res) => {
     res.status(500).json({ message: 'Server Error' });
   }
 };
+// @desc    Verify team payment
+// @route   PUT /api/admin/verify-payment/:registrationId
+// @access  Private/Admin
+const verifyPayment = async (req, res) => {
+  try {
+    const { registrationId } = req.params;
+
+    const registration = await prisma.registration.findUnique({
+      where: { id: registrationId }
+    });
+
+    if (!registration) {
+      return res.status(404).json({ message: 'Registration not found' });
+    }
+
+    const updatedRegistration = await prisma.registration.update({
+      where: { id: registrationId },
+      data: { paymentStatus: 'verified' }
+    });
+
+    res.status(200).json({ message: 'Payment verified successfully', updatedRegistration });
+  } catch (error) {
+    console.error('Verify Payment Error:', error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
 
 module.exports = {
   getAllTeamsWithRegistrations,
   scanFoodTeam,
+  verifyPayment,
 };

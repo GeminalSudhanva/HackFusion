@@ -123,4 +123,12 @@ export const API = {
     if (!res.ok) throw new Error((await res.json()).message || 'Admin scan failed');
     return res.json();
   },
+  adminVerifyPayment: async (registrationId: string) => {
+    const res = await fetch(`${BASE_URL}/admin/verify-payment/${registrationId}`, {
+      method: 'PUT',
+      headers: getHeaders(),
+    });
+    if (!res.ok) throw new Error((await res.json()).message || 'Verify payment failed');
+    return res.json();
+  },
 };

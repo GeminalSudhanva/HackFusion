@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { API } from "@/lib/api";
 import { useAuth } from "@/lib/auth-context";
 import { Navigate } from "react-router-dom";
@@ -13,14 +13,29 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 export default function AdminDashboard() {
   const { user, loading } = useAuth();
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   const { data: teams, isLoading, error } = useQuery({
     queryKey: ["admin-teams"],
     queryFn: () => API.adminFetchTeams(),
     enabled: !!user && user.role === "admin",
+  });
+
+  const verifyMutation = useMutation({
+    mutationFn: (registrationId: string) => API.adminVerifyPayment(registrationId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-teams"] });
+      toast({ title: "Payment Verified", description: "The team's payment status has been updated." });
+    },
+    onError: (err: any) => {
+      toast({ title: "Verification Failed", description: err.message, variant: "destructive" });
+    }
   });
 
   if (loading) return <div className="pt-24 text-center">Checking authorization...</div>;
@@ -142,6 +157,17 @@ export default function AdminDashboard() {
                         >
                           {team.registration.paymentStatus}
                         </Badge>
+                        {team.registration.paymentStatus === 'pending' && (
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="h-6 text-[10px] px-2 w-full max-w-[80px]"
+                            onClick={() => verifyMutation.mutate(team.registration.id)}
+                            disabled={verifyMutation.isPending}
+                          >
+                            Verify
+                          </Button>
+                        )}
                         {team.registration.utrNumber && (
                           <span className="text-[9px] text-muted-foreground">UTR: {team.registration.utrNumber}</span>
                         )}
