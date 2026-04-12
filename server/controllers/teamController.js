@@ -61,7 +61,7 @@ const createTeam = async (req, res) => {
     res.status(201).json(newTeam);
   } catch (error) {
     console.error('Create Team Error:', error);
-    res.status(500).json({ message: 'Server Error' });
+    res.status(500).json({ message: 'Server Error', detail: error.message });
   }
 };
 
@@ -123,7 +123,7 @@ const joinTeamViaCode = async (req, res) => {
     res.status(200).json({ message: 'Joined team successfully', team: updatedTeam });
   } catch (error) {
     console.error('Join Team Error:', error);
-    res.status(500).json({ message: 'Server Error' });
+    res.status(500).json({ message: 'Server Error', detail: error.message });
   }
 };
 
@@ -171,7 +171,7 @@ const sendJoinRequest = async (req, res) => {
     res.status(200).json({ message: 'Join request sent' });
   } catch (error) {
     console.error('Join Request Error:', error);
-    res.status(500).json({ message: 'Server Error' });
+    res.status(500).json({ message: 'Server Error', detail: error.message });
   }
 };
 
@@ -240,7 +240,7 @@ const respondToRequest = async (req, res) => {
     res.status(200).json({ message: accept ? 'Request accepted' : 'Request rejected', team: updatedTeam });
   } catch (error) {
     console.error('Respond Request Error:', error);
-    res.status(500).json({ message: 'Server Error' });
+    res.status(500).json({ message: 'Server Error', detail: error.message });
   }
 };
 
@@ -284,7 +284,7 @@ const getMyTeam = async (req, res) => {
     res.status(200).json(team);
   } catch (error) {
     console.error('Get Team Error:', error);
-    res.status(500).json({ message: 'Server Error' });
+    res.status(500).json({ message: 'Server Error', detail: error.message });
   }
 };
 
@@ -357,7 +357,7 @@ const rollDice = async (req, res) => {
     });
   } catch (error) {
     console.error('Roll Dice Error:', error);
-    res.status(500).json({ message: 'Server Error' });
+    res.status(500).json({ message: 'Server Error', detail: error.message });
   }
 };
 
