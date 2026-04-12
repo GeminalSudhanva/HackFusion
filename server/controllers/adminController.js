@@ -11,7 +11,7 @@ const getAllTeamsWithRegistrations = async (req, res) => {
           select: { name: true, email: true, phone: true }
         },
         members: {
-          select: { name: true, email: true, role: true }
+          select: { name: true, email: true, role: true, foodScans: true }
         },
         registration: true
       },
@@ -28,38 +28,44 @@ const getAllTeamsWithRegistrations = async (req, res) => {
 };
 
 // @desc    Scan food QR code
-// @route   POST /api/admin/scan-food/:teamId
+// @route   POST /api/admin/scan-food/:userId
 // @access  Private/Admin
-const scanFoodTeam = async (req, res) => {
+const scanFoodUser = async (req, res) => {
   try {
-    const { teamId } = req.params;
+    const { userId } = req.params;
 
-    const team = await prisma.team.findUnique({
-      where: { id: teamId },
-      include: { registration: true },
+    const userToScan = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        team: { include: { registration: true } }
+      }
     });
 
-    if (!team) {
-      return res.status(404).json({ message: 'Team not found' });
+    if (!userToScan) {
+      return res.status(404).json({ message: 'User not found' });
     }
 
-    if (team.foodScans >= 4) {
+    if (!userToScan.teamId || !userToScan.team?.registration) {
+      return res.status(400).json({ message: 'User team is not officially registered' });
+    }
+
+    if (userToScan.foodScans >= 4) {
       return res.status(400).json({ 
-        message: 'Maximum meal limit (4/4) reached for this team',
-        teamName: team.teamName,
-        currentScans: team.foodScans 
+        message: 'Maximum meal limit (4/4) reached for this user',
+        teamName: userToScan.name, // Sending user's name but keeping variable name to avoid breaking frontend blindly
+        currentScans: userToScan.foodScans 
       });
     }
 
-    const updatedTeam = await prisma.team.update({
-      where: { id: teamId },
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
       data: { foodScans: { increment: 1 } },
     });
 
     res.status(200).json({ 
-      message: `Food scan successful (${updatedTeam.foodScans}/4)`,
-      teamName: updatedTeam.teamName,
-      totalScans: updatedTeam.foodScans 
+      message: `Food scan successful (${updatedUser.foodScans}/4)`,
+      teamName: updatedUser.name, // Keep variable name backwards compatible with scan screen
+      totalScans: updatedUser.foodScans 
     });
   } catch (error) {
     console.error('Scan Food Error:', error);
@@ -95,6 +101,6 @@ const verifyPayment = async (req, res) => {
 
 module.exports = {
   getAllTeamsWithRegistrations,
-  scanFoodTeam,
+  scanFoodUser,
   verifyPayment,
 };

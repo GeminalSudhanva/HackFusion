@@ -115,8 +115,8 @@ export const API = {
     if (!res.ok) throw new Error((await res.json()).message || 'Admin fetch failed');
     return res.json();
   },
-  adminScanFood: async (teamId: string) => {
-    const res = await fetch(`${BASE_URL}/admin/scan-food/${teamId}`, {
+  adminScanFood: async (userId: string) => {
+    const res = await fetch(`${BASE_URL}/admin/scan-food/${userId}`, {
       method: 'POST',
       headers: getHeaders(),
     });

@@ -16,6 +16,7 @@ model User {
   college   String
   password  String
   role      String   @default("member")
+  foodScans Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -30,7 +31,6 @@ model Team {
   teamName   String
   teamCode         String   @unique
   maxSize          Int      @default(4)
-  foodScans        Int      @default(0)
   problemStatement Int?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt

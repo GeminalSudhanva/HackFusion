@@ -131,16 +131,15 @@ export default function AdminDashboard() {
                     )}
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-2">
-                       <div className="w-full bg-secondary/50 h-1.5 rounded-full overflow-hidden min-w-[60px]">
-                          <div 
-                            className={`h-full ${team.foodScans >= 4 ? 'bg-destructive' : 'bg-primary'}`} 
-                            style={{ width: `${(team.foodScans / 4) * 100}%` }}
-                          ></div>
-                       </div>
-                       <span className={`text-[10px] font-bold ${team.foodScans >= 4 ? 'text-destructive' : 'text-white'}`}>
-                          {team.foodScans}/4
-                       </span>
+                    <div className="flex flex-col gap-1.5">
+                      {team.members.map((m: any) => (
+                        <div key={m.id} className="flex items-center justify-between gap-2 text-[10px]">
+                          <span className="truncate max-w-[80px]">{m.name.split(' ')[0]}</span>
+                          <span className={`font-bold px-1.5 py-0.5 rounded ${m.foodScans >= 4 ? 'bg-destructive/20 text-destructive' : m.foodScans > 0 ? 'bg-primary/20 text-primary' : 'bg-muted text-muted-foreground'}`}>
+                            {m.foodScans || 0}/4
+                          </span>
+                        </div>
+                      ))}
                     </div>
                   </TableCell>
                   <TableCell className="text-right">

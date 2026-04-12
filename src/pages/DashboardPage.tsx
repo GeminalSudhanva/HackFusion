@@ -75,7 +75,7 @@ export default function DashboardPage() {
   }
 
   const isLeader = myTeam?.leaderId === (user?.id || (user as any)?._id);
-  const scanLink = `${window.location.origin}/admin/scan?teamId=${myTeam?.id}`;
+  const scanLink = `${window.location.origin}/admin/scan?userId=${user?.id || (user as any)?._id}`;
 
   return (
     <div className="min-h-screen pt-20 pb-10 px-4">
@@ -202,7 +202,7 @@ export default function DashboardPage() {
                           <span className="bg-primary text-background text-[10px] font-black px-3 py-1 rounded-full uppercase">Scan for Meal</span>
                        </div>
                     </div>
-                    <p className="text-[11px] text-muted-foreground pt-2">Show this to the food counter staff to log your meal (Limit: 4/team)</p>
+                    <p className="text-[11px] text-muted-foreground pt-2">Show this to the food counter staff to log your meal (Limit: 4 meals/user)</p>
                   </div>
                 </div>
               ) : myTeam && isLeader ? (

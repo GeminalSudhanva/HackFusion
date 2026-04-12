@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export default function ScanPage() {
   const [searchParams] = useSearchParams();
-  const teamId = searchParams.get("teamId");
+  const userId = searchParams.get("userId");
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -17,17 +17,17 @@ export default function ScanPage() {
   const [details, setDetails] = useState<any>(null);
 
   useEffect(() => {
-    if (!teamId) {
+    if (!userId) {
       setStatus("error");
-      setMessage("No Team ID found in QR code");
+      setMessage("No User ID found in QR code");
       return;
     }
     processScan();
-  }, [teamId]);
+  }, [userId]);
 
   async function processScan() {
     try {
-      const res = await API.adminScanFood(teamId!);
+      const res = await API.adminScanFood(userId!);
       setStatus("success");
       setMessage(res.message);
       setDetails(res);
