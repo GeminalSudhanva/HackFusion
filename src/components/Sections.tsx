@@ -196,54 +196,7 @@ export function Domains() {
 // ────────────────────────────────────────
 // PRIZE SECTION
 // ────────────────────────────────────────
-export function PrizeSection() {
-  const prizes = [
-    { place: "1st Place", amount: "₹30,000", icon: "🥇", gradient: "from-yellow-400/20 to-amber-600/10", border: "border-yellow-400/30", glow: "shadow-[0_0_50px_-10px_rgba(234,179,8,0.4)]" },
-    { place: "2nd Place", amount: "₹20,000", icon: "🥈", gradient: "from-gray-300/20 to-gray-500/10", border: "border-gray-400/30", glow: "shadow-[0_0_40px_-10px_rgba(156,163,175,0.3)]" },
-    { place: "3rd Place", amount: "₹10,000", icon: "🥉", gradient: "from-orange-400/20 to-amber-700/10", border: "border-orange-400/30", glow: "shadow-[0_0_40px_-10px_rgba(251,146,60,0.3)]" },
-  ];
 
-  return (
-    <section className="py-24 relative overflow-hidden">
-      <div className="absolute inset-0 grid-bg opacity-10 pointer-events-none" />
-      <div className="container mx-auto px-6 max-w-5xl text-center">
-        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0} className="mb-6">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-yellow-400/20 bg-yellow-400/5 mb-6">
-            <Trophy className="w-4 h-4 text-yellow-400" />
-            <span className="text-xs uppercase tracking-widest text-yellow-400 font-semibold">Prize Pool</span>
-          </div>
-          <h2 className="font-display text-4xl md:text-5xl font-black mb-4 tracking-tight">
-            Win <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-400 to-amber-500">₹75,000</span>
-          </h2>
-          <p className="text-gray-400 max-w-lg mx-auto">Compete for glory and walk away with a life-changing prize.</p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
-          {prizes.map((p, i) => (
-            <motion.div
-              key={p.place}
-              initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={i + 1}
-              whileHover={{ y: -10, scale: 1.04 }}
-              transition={{ type: "spring", stiffness: 280, damping: 18 }}
-              className={`p-8 rounded-3xl bg-gradient-to-b ${p.gradient} border ${p.border} ${p.glow} backdrop-blur-sm`}
-            >
-              <div className="text-5xl mb-4">{p.icon}</div>
-              <p className="text-white/60 text-sm font-semibold uppercase tracking-widest mb-2">{p.place}</p>
-              <p className="font-display text-4xl font-black text-white">{p.amount}</p>
-            </motion.div>
-          ))}
-        </div>
-
-        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={4} className="mt-8">
-          <div className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white/5 border border-white/10 text-gray-300 text-sm">
-            <Award className="w-4 h-4 text-primary" />
-            <span>+ Special awards and certificates for all participants</span>
-          </div>
-        </motion.div>
-      </div>
-    </section>
-  );
-}
 
 // ────────────────────────────────────────
 // TIMELINE

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { HeroSection } from "@/components/ui/hero-odyssey";
-import { HighlightStrip, About, Domains, PrizeSection, Timeline, WhyJoin, CollegePreview, FinalCTA } from "@/components/Sections";
+import { HighlightStrip, About, Domains, Timeline, WhyJoin, CollegePreview, FinalCTA } from "@/components/Sections";
 
 export default function LandingPage() {
   useEffect(() => {
@@ -13,7 +13,7 @@ export default function LandingPage() {
       <HighlightStrip />
       <About />
       <Domains />
-      <PrizeSection />
+
       <Timeline />
       <WhyJoin />
       <CollegePreview />

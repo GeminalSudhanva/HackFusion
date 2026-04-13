@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import {
   MapPin, Clock, Trophy, Github, Wallet, AlertTriangle,
   Code2, Zap, Moon, CheckCircle2, Info, Star, Users,
-  ChevronRight, Globe
+  ChevronRight, Globe, Sparkles
 } from "lucide-react";
 
 const fadeUp = {
@@ -118,8 +118,7 @@ export function FeesAndPrizes() {
   return (
     <section className="relative z-10 px-6 max-w-7xl mx-auto">
       <GlowDivider />
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-        {/* Registration Fee */}
+      <div className="max-w-xl mx-auto">
         <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0}>
           <div className="p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm h-full">
             <div className="flex items-center gap-4 mb-6">
@@ -141,31 +140,6 @@ export function FeesAndPrizes() {
             </div>
           </div>
         </motion.div>
-
-        {/* Prize Breakdown */}
-        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={1}>
-          <div className="p-8 rounded-3xl bg-gradient-to-br from-yellow-500/10 to-amber-500/5 border border-yellow-400/20 backdrop-blur-sm h-full">
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-12 h-12 bg-yellow-500/10 rounded-xl flex items-center justify-center border border-yellow-400/20">
-                <Trophy className="w-6 h-6 text-yellow-400" />
-              </div>
-              <h3 className="font-display text-2xl font-bold text-white">Prize Breakdown</h3>
-            </div>
-            <div className="space-y-3">
-              {[
-                { place: "🥇 1st Place", amount: "₹30,000" },
-                { place: "🥈 2nd Place", amount: "₹20,000" },
-                { place: "🥉 3rd Place", amount: "₹10,000" },
-                { place: "🌟 Special Awards", amount: "₹15,000" },
-              ].map(p => (
-                <div key={p.place} className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10">
-                  <span className="text-sm font-medium text-gray-300">{p.place}</span>
-                  <span className="font-display font-black text-yellow-400">{p.amount}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </motion.div>
       </div>
     </section>
   );
@@ -181,7 +155,7 @@ const roadmap = [
   { time: "6 May, 12 AM", event: "Midnight Madness", desc: "Surprise activity and team energy boost.", emoji: "🌙" },
   { time: "6 May, 9 AM", event: "Submission Deadline", desc: "GitHub repo locked. All submissions closed.", emoji: "⏰" },
   { time: "6 May, 10 AM", event: "Project Demos", desc: "Present your solution to judges.", emoji: "🎤" },
-  { time: "6 May, 3 PM", event: "Closing & Prizes", desc: "Winners announced and awards distributed.", emoji: "🏆" },
+  { time: "6 May, 3 PM", event: "Closing Ceremony", desc: "Certificates distribution and closing ceremony.", emoji: "🏆" },
 ];
 
 export function Roadmap() {
