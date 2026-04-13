@@ -20,7 +20,7 @@ export default function AboutPage() {
             <div className="w-24 h-1 bg-gradient-to-r from-primary to-transparent mx-auto rounded-full" />
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
             {/* Sanjeev */}
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={1} className="glass-card p-6 rounded-2xl flex flex-col items-center text-center hover:-translate-y-2 transition-transform duration-300">
               <div className="w-32 h-32 rounded-full bg-secondary overflow-hidden mb-6 border-2 border-primary/30 flex items-center justify-center shadow-lg">
@@ -46,7 +46,16 @@ export default function AboutPage() {
                 <img src="/Shrusti.jpeg" alt="Shrusti" className="w-full h-full object-cover" />
               </div>
               <h3 className="font-display text-xl font-bold text-foreground">Shrusti</h3>
-              <p className="text-primary font-medium mb-2">UI/UX Developer</p>
+              <p className="text-primary font-medium mb-2">Database Dev</p>
+            </motion.div>
+
+            {/* Krishi */}
+            <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={4} className="glass-card p-6 rounded-2xl flex flex-col items-center text-center hover:-translate-y-2 transition-transform duration-300">
+              <div className="w-32 h-32 rounded-full bg-secondary overflow-hidden mb-6 border-2 border-primary/30 flex items-center justify-center shadow-lg">
+                <img src="/krishi.jpeg" alt="Krishi" className="w-full h-full object-cover" />
+              </div>
+              <h3 className="font-display text-xl font-bold text-foreground">Krishi</h3>
+              <p className="text-primary font-medium mb-2">UI UX Developer</p>
             </motion.div>
           </div>
         </div>

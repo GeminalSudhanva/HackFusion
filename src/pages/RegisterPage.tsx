@@ -150,7 +150,7 @@ export default function RegisterPage() {
                 <div className="flex flex-col items-center justify-center text-center p-6 bg-secondary/20 rounded-2xl border border-secondary">
                   <span className="text-muted-foreground text-sm uppercase tracking-wider mb-2">Total Amount due</span>
                   <div className="text-5xl font-extrabold text-foreground tracking-tight mb-2 flex items-start justify-center">
-                    <span className="text-2xl mt-1 mr-1 text-primary">₹</span>700
+                    <span className="text-2xl mt-1 mr-1 text-primary">₹</span>600
                   </div>
                   <p className="text-sm text-muted-foreground max-w-xs mt-2">
                     Scan the QR code and complete payment, then enter your UTR number below
@@ -162,11 +162,11 @@ export default function RegisterPage() {
                   <div className="relative p-2 bg-white rounded-xl shadow-2xl">
                     {/* Display QR Image */}
                     <img 
-                      src="/paymentQR.png" 
+                      src="/QR Code.jpeg" 
                       alt="Payment QR Code" 
                       className="w-48 h-48 object-cover rounded-lg"
                       onError={(e) => {
-                        (e.target as HTMLImageElement).src = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=dummy@upi&pn=HackFusion&am=700.00&cu=INR';
+                        (e.target as HTMLImageElement).src = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=dummy@upi&pn=HackFusion&am=600.00&cu=INR';
                       }}
                     />
                   </div>

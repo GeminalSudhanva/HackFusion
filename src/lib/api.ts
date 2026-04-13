@@ -131,4 +131,12 @@ export const API = {
     if (!res.ok) throw new Error((await res.json()).message || 'Verify payment failed');
     return res.json();
   },
+  adminToggleKit: async (userId: string) => {
+    const res = await fetch(`${BASE_URL}/admin/kit/${userId}`, {
+      method: 'PATCH',
+      headers: getHeaders(),
+    });
+    if (!res.ok) throw new Error((await res.json()).message || 'Toggle kit failed');
+    return res.json();
+  },
 };

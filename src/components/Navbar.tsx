@@ -27,6 +27,8 @@ export default function Navbar() {
         {/* Desktop */}
         <div className="hidden md:flex items-center gap-6">
           <Link to="/" className="text-sm text-muted-foreground hover:text-primary transition-colors">Home</Link>
+          <Link to="/event" className="text-sm text-muted-foreground hover:text-primary transition-colors">Event</Link>
+          <Link to="/accommodation" className="text-sm text-muted-foreground hover:text-primary transition-colors">Accommodation</Link>
           {user ? (
             <>
               {user.role === 'admin' && (
@@ -60,6 +62,8 @@ export default function Navbar() {
       {open && (
         <div className="md:hidden glass-card border-t border-border/50 p-4 flex flex-col gap-3">
           <Link to="/" onClick={() => setOpen(false)} className="text-sm text-muted-foreground hover:text-primary">Home</Link>
+          <Link to="/event" onClick={() => setOpen(false)} className="text-sm text-muted-foreground hover:text-primary">Event</Link>
+          <Link to="/accommodation" onClick={() => setOpen(false)} className="text-sm text-muted-foreground hover:text-primary">Accommodation</Link>
           {user ? (
             <>
               {user.role === 'admin' && (

@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { API } from "@/lib/api";
 import { useAuth } from "@/lib/auth-context";
 import { Navigate } from "react-router-dom";
-import { Users, ShieldCheck, Mail, Phone, School, ClipboardList, CheckCircle2, Clock, AlertCircle } from "lucide-react";
+import { Users, ShieldCheck, Mail, CheckCircle2, Clock, Package } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -38,6 +38,17 @@ export default function AdminDashboard() {
     }
   });
 
+  const kitMutation = useMutation({
+    mutationFn: (userId: string) => API.adminToggleKit(userId),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["admin-teams"] });
+      toast({ title: data.kitReceived ? "Kit Marked as Received ✅" : "Kit Marked as Not Received", description: data.message });
+    },
+    onError: (err: any) => {
+      toast({ title: "Kit Toggle Failed", description: err.message, variant: "destructive" });
+    }
+  });
+
   if (loading) return <div className="pt-24 text-center">Checking authorization...</div>;
   if (!user || user.role !== "admin") return <Navigate to="/dashboard" replace />;
 
@@ -70,6 +81,7 @@ export default function AdminDashboard() {
                 <TableHead>Domain</TableHead>
                 <TableHead>Problem</TableHead>
                 <TableHead>Food Scans</TableHead>
+                <TableHead>Kit Received</TableHead>
                 <TableHead className="text-right">Payment</TableHead>
               </TableRow>
             </TableHeader>
@@ -142,6 +154,29 @@ export default function AdminDashboard() {
                       ))}
                     </div>
                   </TableCell>
+                  {/* KIT RECEIVED COLUMN */}
+                  <TableCell>
+                    <div className="flex flex-col gap-1.5">
+                      {team.members.map((m: any) => (
+                        <div key={m.id} className="flex items-center justify-between gap-2 text-[10px]">
+                          <span className="truncate max-w-[60px]">{m.name.split(' ')[0]}</span>
+                          <button
+                            onClick={() => kitMutation.mutate(m.id)}
+                            disabled={kitMutation.isPending}
+                            title={m.kitReceived ? 'Mark as NOT received' : 'Mark as received'}
+                            className={`flex items-center gap-1 px-1.5 py-0.5 rounded border transition-colors ${
+                              m.kitReceived
+                                ? 'bg-green-500/20 border-green-500/40 text-green-400 hover:bg-red-500/20 hover:border-red-500/40 hover:text-red-400'
+                                : 'bg-muted border-border text-muted-foreground hover:bg-green-500/20 hover:border-green-500/40 hover:text-green-400'
+                            }`}
+                          >
+                            <Package className="h-2.5 w-2.5" />
+                            {m.kitReceived ? 'Yes' : 'No'}
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </TableCell>
                   <TableCell className="text-right">
                     {team.registration ? (
                       <div className="flex flex-col items-end gap-1">
@@ -179,7 +214,7 @@ export default function AdminDashboard() {
               ))}
               {teams?.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={8} className="text-center py-12 text-muted-foreground text-sm italic">
+                  <TableCell colSpan={9} className="text-center py-12 text-muted-foreground text-sm italic">
                     No teams registered yet.
                   </TableCell>
                 </TableRow>

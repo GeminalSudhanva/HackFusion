@@ -14,6 +14,8 @@ import RegisterPage from "./pages/RegisterPage";
 import AdminDashboard from "./pages/AdminDashboard";
 import ScanPage from "./pages/ScanPage";
 import AboutPage from "./pages/AboutPage";
+import EventPage from "./pages/EventPage";
+import AccommodationPage from "./pages/AccommodationPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,6 +38,8 @@ const App = () => (
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/scan" element={<ScanPage />} />
             <Route path="/about" element={<AboutPage />} />
+            <Route path="/event" element={<EventPage />} />
+            <Route path="/accommodation" element={<AccommodationPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

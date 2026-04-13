@@ -11,7 +11,7 @@ const getAllTeamsWithRegistrations = async (req, res) => {
           select: { name: true, email: true, phone: true }
         },
         members: {
-          select: { name: true, email: true, role: true, foodScans: true }
+          select: { id: true, name: true, email: true, role: true, foodScans: true, kitReceived: true }
         },
         registration: true
       },
@@ -99,8 +99,37 @@ const verifyPayment = async (req, res) => {
   }
 };
 
+// @desc    Toggle kit received for a user
+// @route   PATCH /api/admin/kit/:userId
+// @access  Private/Admin
+const toggleKitReceived = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const userToUpdate = await prisma.user.findUnique({ where: { id: userId } });
+
+    if (!userToUpdate) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const updated = await prisma.user.update({
+      where: { id: userId },
+      data: { kitReceived: !userToUpdate.kitReceived },
+    });
+
+    res.status(200).json({
+      message: `Kit marked as ${updated.kitReceived ? 'received' : 'not received'} for ${updated.name}`,
+      kitReceived: updated.kitReceived,
+    });
+  } catch (error) {
+    console.error('Toggle Kit Error:', error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
 module.exports = {
   getAllTeamsWithRegistrations,
   scanFoodUser,
   verifyPayment,
+  toggleKitReceived,
 };
