@@ -1,4 +1,5 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -115,6 +116,95 @@ export function About() {
               ))}
             </div>
           </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ────────────────────────────────────────
+// PAST HIGHLIGHTS (SLIDESHOW)
+// ────────────────────────────────────────
+const pastImages = [
+  { url: "/image 1.jpeg", title: "Innovation in Action", desc: "Winners" },
+  { url: "/image 2.jpeg", title: "Collaborative Spirit", desc: "Winners" },
+  { url: "/image 3.jpeg", title: "Mentorship & Growth", desc: "Hackathon Glimpse" },
+  { url: "/image 4.jpeg", title: "The Final Pitch", desc: "Formal Function" },
+];
+
+export function PastHighlights() {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % pastImages.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <section className="py-24 relative overflow-hidden bg-black/20">
+      <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-primary/5 pointer-events-none" />
+      <div className="container mx-auto px-6 max-w-6xl">
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0} className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/20 bg-primary/5 mb-6">
+            <Rocket className="w-4 h-4 text-primary" />
+            <span className="text-xs uppercase tracking-widest text-primary font-semibold">Previous Edition</span>
+          </div>
+          <h2 className="font-display text-4xl md:text-5xl font-black mb-4 tracking-tight">
+            Past Edition <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-500">Highlights</span>
+          </h2>
+          <p className="text-gray-400 max-w-xl mx-auto">Relive the energy, innovation, and excitement of our previous hackathons.</p>
+        </motion.div>
+
+        <div className="relative aspect-[16/9] md:aspect-[21/9] rounded-3xl overflow-hidden border border-white/10 shadow-2xl glass-card">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, scale: 1.1 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 1, ease: "easeInOut" }}
+              className="absolute inset-0"
+            >
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10" />
+              <img
+                src={pastImages[index].url}
+                alt={pastImages[index].title}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12 z-20">
+                <motion.h3
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="font-display text-2xl md:text-3xl font-bold text-white mb-2"
+                >
+                  {pastImages[index].title}
+                </motion.h3>
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                  className="text-gray-300 text-sm md:text-base max-w-2xl"
+                >
+                  {pastImages[index].desc}
+                </motion.p>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Progress Indicators */}
+          <div className="absolute bottom-6 right-8 z-30 flex gap-2">
+            {pastImages.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setIndex(i)}
+                className={`h-1.5 rounded-full transition-all duration-300 ${index === i ? "w-8 bg-primary" : "w-2 bg-white/30 hover:bg-white/50"
+                  }`}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>
