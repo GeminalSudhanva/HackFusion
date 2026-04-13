@@ -152,25 +152,49 @@ export default function AccommodationPage() {
           >
             <div className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 p-8 rounded-[32px] shadow-2xl relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/20 rounded-full blur-3xl" />
-              <h2 className="font-display text-2xl font-bold text-white mb-8 tracking-tight">Contact Coordinator</h2>
+              <h2 className="font-display text-2xl font-bold text-white mb-8 tracking-tight">Contact Coordinators</h2>
 
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center border border-white/20">
-                  <Phone className="w-8 h-8 text-blue-400" />
+              <div className="space-y-8">
+                {/* Johan J */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center border border-blue-500/20">
+                      <Phone className="w-8 h-8 text-blue-400" />
+                    </div>
+                    <div>
+                      <h4 className="text-xl font-bold text-white">Johan J</h4>
+                      <p className="text-sm text-gray-400">Accommodation Team</p>
+                    </div>
+                  </div>
+                  <a
+                    href="tel:+917892821517"
+                    className="w-full flex items-center justify-center gap-2 bg-white text-black font-bold py-3 rounded-xl hover:bg-gray-200 transition-colors"
+                  >
+                    <Phone className="w-4 h-4" />
+                    +91 78928 21517
+                  </a>
                 </div>
-                <div>
-                  <h4 className="text-xl font-bold text-white">Sanjeev Nadgir</h4>
-                  <p className="text-sm text-gray-400">Accommodation Team</p>
+
+                {/* Bhavani Dengi */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-16 h-16 bg-purple-500/10 rounded-full flex items-center justify-center border border-purple-500/20">
+                      <Phone className="w-8 h-8 text-purple-400" />
+                    </div>
+                    <div>
+                      <h4 className="text-xl font-bold text-white">Bhavani Dengi</h4>
+                      <p className="text-sm text-gray-400">Accommodation Team</p>
+                    </div>
+                  </div>
+                  <a
+                    href="tel:+917204005783"
+                    className="w-full flex items-center justify-center gap-2 bg-white/10 text-white font-bold py-3 rounded-xl hover:bg-white/20 border border-white/10 transition-colors"
+                  >
+                    <Phone className="w-4 h-4" />
+                    +91 72040 05783
+                  </a>
                 </div>
               </div>
-
-              <a
-                href="tel:+919611103853"
-                className="w-full flex items-center justify-center gap-2 bg-white text-black font-bold py-4 rounded-xl hover:bg-gray-200 transition-colors"
-              >
-                <Phone className="w-5 h-5" />
-                +91 98765 43210
-              </a>
             </div>
           </motion.div>
         </div>
