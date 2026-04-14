@@ -149,7 +149,7 @@ export function FeesAndPrizes() {
 // ROADMAP
 // ────────────────────────────────────────
 const roadmap = [
-  { time: "4 May", event: "Arrival & Check-in", desc: "Settle in, complete check-in, and meet your team.", emoji: "🚀" },
+  { time: "5 May", event: "Arrival & Check-in", desc: "Settle in, complete check-in, and meet your team.", emoji: "🚀" },
   { time: "5 May, 9 AM", event: "Opening Ceremony", desc: "Inauguration and problem statement reveal.", emoji: "🎯" },
   { time: "5 May, 10 AM", event: "Hacking Starts!", desc: "24-hour sprint begins — build, break, and iterate!", emoji: "💻" },
   { time: "6 May, 12 AM", event: "Midnight Madness", desc: "Surprise activity and team energy boost.", emoji: "🌙" },

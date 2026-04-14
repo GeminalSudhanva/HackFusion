@@ -292,7 +292,7 @@ export function Domains() {
 // TIMELINE
 // ────────────────────────────────────────
 const timelineEvents = [
-  { time: "Day 0 — 4 May", event: "Arrival & Check-in", desc: "Participants arrive, settle in, and complete registration formalities.", icon: "🚀" },
+  { time: "Day 1 — 5 May", event: "Arrival & Check-in", desc: "Participants arrive, settle in, and complete registration formalities.", icon: "🚀" },
   { time: "Day 1 — 5 May, 9:00 AM", event: "Opening Ceremony", desc: "Inauguration, problem statement reveal, and team briefing.", icon: "🎯" },
   { time: "5 May, 10:00 AM", event: "Hacking Begins!", desc: "The 24-hour coding sprint officially kicks off.", icon: "💻" },
   { time: "5 May, 1:00 PM", event: "Lunch Break", desc: "Fuel up and keep building. Food served on-site.", icon: "🍽️" },
