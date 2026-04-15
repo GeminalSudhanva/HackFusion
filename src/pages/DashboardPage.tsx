@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth-context";
 import { API } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
-import { Users, Shield, CheckCircle, AlertCircle, UserPlus, Dice5, QrCode, Utensils } from "lucide-react";
+import { Users, Shield, CheckCircle, AlertCircle, UserPlus, Dice5, QrCode, Utensils, MessageCircle } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 
 export default function DashboardPage() {
@@ -230,6 +230,28 @@ export default function DashboardPage() {
                 </div>
               )}
             </motion.div>
+
+            {/* WhatsApp Group Link - visible to ALL team members after registration */}
+            {registration && (
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="glass-card p-6 relative overflow-hidden border border-green-500/20">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/10 rounded-full blur-3xl pointer-events-none" />
+                <h2 className="font-display text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                  <MessageCircle className="h-5 w-5 text-green-400" /> WhatsApp Group
+                </h2>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Join the official HackFusion 2.0 WhatsApp group for live updates, announcements, and coordination.
+                </p>
+                <a
+                  href="https://chat.whatsapp.com/YOUR_GROUP_LINK_HERE"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl transition-colors shadow-lg shadow-green-500/20"
+                >
+                  <MessageCircle className="w-5 h-5" />
+                  Join WhatsApp Group
+                </a>
+              </motion.div>
+            )}
 
             {/* Problem Statement Dice Roll */}
             {registration && (
