@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { API } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
-import { CheckCircle2, XCircle, Loader2, Utensils, ArrowLeft, Package, Coffee, Sun, Moon } from "lucide-react";
+import { CheckCircle2, XCircle, Loader2, Utensils, ArrowLeft, Package, Coffee, Sun, Moon, Users, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 
