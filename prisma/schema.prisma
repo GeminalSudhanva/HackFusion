@@ -47,7 +47,7 @@ model Registration {
   id            String   @id @default(uuid())
   domain        String
   utrNumber     String
-  amount        Float    @default(600)
+  amount        Float    @default(800)
   paymentStatus String   @default("pending")
   status        String   @default("registered")
   createdAt     DateTime @default(now())
