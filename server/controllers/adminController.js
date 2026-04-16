@@ -49,9 +49,9 @@ const scanFoodUser = async (req, res) => {
       return res.status(400).json({ message: 'User team is not officially registered' });
     }
 
-    if (userToScan.foodScans >= 4) {
+    if (userToScan.foodScans >= 3) {
       return res.status(400).json({ 
-        message: 'Maximum meal limit (4/4) reached for this user',
+        message: 'Maximum meal limit (3/3) reached for this user',
         teamName: userToScan.name, // Sending user's name but keeping variable name to avoid breaking frontend blindly
         currentScans: userToScan.foodScans 
       });
@@ -63,7 +63,7 @@ const scanFoodUser = async (req, res) => {
     });
 
     res.status(200).json({ 
-      message: `Food scan successful (${updatedUser.foodScans}/4)`,
+      message: `Food scan successful (${updatedUser.foodScans}/3)`,
       teamName: updatedUser.name, // Keep variable name backwards compatible with scan screen
       totalScans: updatedUser.foodScans 
     });

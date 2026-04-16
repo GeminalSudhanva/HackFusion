@@ -270,7 +270,7 @@ export default function RegisterPage() {
                       className="relative p-3 bg-white rounded-2xl shadow-[0_0_40px_-10px_rgba(0,255,255,0.2)]"
                     >
                       <img 
-                        src="/QR Code.jpeg" 
+                        src="/Payment Recieve QR.jpeg" 
                         alt="Payment QR Code" 
                         className="w-48 h-48 object-cover rounded-xl"
                         onError={(e) => {

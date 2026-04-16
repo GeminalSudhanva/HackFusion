@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth-context";
 import { API } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
-import { Users, Shield, CheckCircle, AlertCircle, UserPlus, Dice5, QrCode, Utensils, MessageCircle } from "lucide-react";
+import { Users, Shield, CheckCircle, AlertCircle, UserPlus, Dice5, QrCode, Utensils, MessageCircle, Package, X } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 
 export default function DashboardPage() {
@@ -18,6 +18,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [isRolling, setIsRolling] = useState(false);
   const [displayDice, setDisplayDice] = useState(1);
+  const [activeQR, setActiveQR] = useState<"team" | "kit" | "food" | null>(null);
 
   useEffect(() => {
     if (authLoading) return;
@@ -75,7 +76,10 @@ export default function DashboardPage() {
   }
 
   const isLeader = myTeam?.leaderId === (user?.id || (user as any)?._id);
-  const scanLink = `${window.location.origin}/admin/scan?userId=${user?.id || (user as any)?._id}`;
+  const userId = user?.id || (user as any)?._id;
+  const foodScanLink = `${window.location.origin}/admin/scan?userId=${userId}&type=food`;
+  const kitScanLink = `${window.location.origin}/admin/scan?userId=${userId}&type=kit`;
+  const teamScanLink = `${window.location.origin}/admin/scan?teamId=${myTeam?.id}&type=team`;
 
   return (
     <div className="min-h-screen pt-20 pb-10 px-4">
@@ -171,7 +175,7 @@ export default function DashboardPage() {
           </div>
 
           <div className="space-y-6">
-            {/* Registration Status & QR */}
+            {/* Registration Status */}
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="glass-card p-6 overflow-hidden relative">
               <h2 className="font-display text-lg font-semibold text-white mb-6 flex items-center gap-2">
                 <CheckCircle className={`h-5 w-5 ${registration ? "text-green-500" : "text-muted-foreground"}`} />
@@ -191,33 +195,116 @@ export default function DashboardPage() {
                     </div>
                   </div>
 
-                  {/* FOOD QR CODE */}
-                  <div className="pt-6 border-t border-white/10 text-center space-y-4">
-                    <p className="text-sm font-bold text-white flex items-center justify-center gap-2">
-                       <Utensils className="w-4 h-4 text-primary" /> Food Service QR
-                    </p>
-                    <div 
-                      className="bg-white p-4 rounded-2xl inline-block shadow-2xl shadow-primary/20 relative"
-                      style={{ colorScheme: "light" }} // Prevents mobile browser dark-mode overriding the SVG colors
+                  {/* 3 QR Buttons */}
+                  <div className="pt-4 border-t border-white/10 space-y-3">
+                    <p className="text-xs text-muted-foreground uppercase text-center mb-2">QR Codes</p>
+                    
+                    <button
+                      onClick={() => setActiveQR(activeQR === "team" ? null : "team")}
+                      className={`w-full flex items-center gap-3 p-3 rounded-xl border transition-all ${
+                        activeQR === "team" ? "bg-primary/10 border-primary/30 text-primary" : "bg-white/5 border-white/10 text-white hover:bg-white/10"
+                      }`}
                     >
-                       <QRCodeSVG 
-                         value={scanLink || window.location.origin} 
-                         size={160} 
-                         level="H" 
-                         includeMargin 
-                         fgColor="#000000" 
-                         bgColor="#FFFFFF"
-                       />
-                       <div className="absolute inset-x-0 bottom-[-10px] flex justify-center">
-                          <span className="bg-primary text-background text-[10px] font-black px-3 py-1 rounded-full uppercase">Scan for Meal</span>
-                       </div>
-                    </div>
-                    <p className="text-[11px] text-muted-foreground pt-2">Show this to the food counter staff to log your meal (Limit: 4 meals/user)</p>
+                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${activeQR === "team" ? "bg-primary/20" : "bg-white/10"}`}>
+                        <Users className="w-5 h-5" />
+                      </div>
+                      <div className="text-left flex-1">
+                        <p className="text-sm font-bold">Team QR</p>
+                        <p className="text-[10px] text-muted-foreground">Team registration QR</p>
+                      </div>
+                    </button>
+
+                    <button
+                      onClick={() => setActiveQR(activeQR === "kit" ? null : "kit")}
+                      className={`w-full flex items-center gap-3 p-3 rounded-xl border transition-all ${
+                        activeQR === "kit" ? "bg-orange-500/10 border-orange-500/30 text-orange-400" : "bg-white/5 border-white/10 text-white hover:bg-white/10"
+                      }`}
+                    >
+                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${activeQR === "kit" ? "bg-orange-500/20" : "bg-white/10"}`}>
+                        <Package className="w-5 h-5" />
+                      </div>
+                      <div className="text-left flex-1">
+                        <p className="text-sm font-bold">Kit QR</p>
+                        <p className="text-[10px] text-muted-foreground">Scan to receive your kit</p>
+                      </div>
+                    </button>
+
+                    <button
+                      onClick={() => setActiveQR(activeQR === "food" ? null : "food")}
+                      className={`w-full flex items-center gap-3 p-3 rounded-xl border transition-all ${
+                        activeQR === "food" ? "bg-green-500/10 border-green-500/30 text-green-400" : "bg-white/5 border-white/10 text-white hover:bg-white/10"
+                      }`}
+                    >
+                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${activeQR === "food" ? "bg-green-500/20" : "bg-white/10"}`}>
+                        <Utensils className="w-5 h-5" />
+                      </div>
+                      <div className="text-left flex-1">
+                        <p className="text-sm font-bold">Food QR</p>
+                        <p className="text-[10px] text-muted-foreground">Meal service (3 meals)</p>
+                      </div>
+                    </button>
                   </div>
+
+                  {/* QR Display Area */}
+                  <AnimatePresence mode="wait">
+                    {activeQR && (
+                      <motion.div
+                        key={activeQR}
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="pt-4 border-t border-white/10 text-center space-y-4">
+                          <div className="flex items-center justify-between">
+                            <p className="text-sm font-bold text-white flex items-center gap-2">
+                              {activeQR === "team" && <><Users className="w-4 h-4 text-primary" /> Team QR</>}
+                              {activeQR === "kit" && <><Package className="w-4 h-4 text-orange-400" /> Kit QR</>}
+                              {activeQR === "food" && <><Utensils className="w-4 h-4 text-green-400" /> Food QR</>}
+                            </p>
+                            <button onClick={() => setActiveQR(null)} className="text-muted-foreground hover:text-white transition-colors">
+                              <X className="w-4 h-4" />
+                            </button>
+                          </div>
+                          <div 
+                            className="bg-white p-4 rounded-2xl inline-block shadow-2xl shadow-primary/20 relative"
+                            style={{ colorScheme: "light" }}
+                          >
+                             <QRCodeSVG 
+                               value={
+                                 activeQR === "team" ? teamScanLink :
+                                 activeQR === "kit" ? kitScanLink :
+                                 foodScanLink
+                               }
+                               size={160} 
+                               level="H" 
+                               includeMargin 
+                               fgColor="#000000" 
+                               bgColor="#FFFFFF"
+                             />
+                             <div className="absolute inset-x-0 bottom-[-10px] flex justify-center">
+                                <span className={`text-background text-[10px] font-black px-3 py-1 rounded-full uppercase ${
+                                  activeQR === "team" ? "bg-primary" :
+                                  activeQR === "kit" ? "bg-orange-500" :
+                                  "bg-green-500"
+                                }`}>
+                                  {activeQR === "team" ? "Team" : activeQR === "kit" ? "Kit" : "Food"}
+                                </span>
+                             </div>
+                          </div>
+                          <p className="text-[11px] text-muted-foreground pt-2">
+                            {activeQR === "team" && "Show this to admin for team verification."}
+                            {activeQR === "kit" && "Show this to receive your hackathon kit."}
+                            {activeQR === "food" && "Show this to the food counter staff (Limit: 3 meals/user)."}
+                          </p>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               ) : myTeam && isLeader ? (
                 <div className="text-center py-6">
-                  <p className="text-sm text-muted-foreground mb-4">Complete your registration to unlock the QR code and Dice roll.</p>
+                  <p className="text-sm text-muted-foreground mb-4">Complete your registration to unlock the QR codes and Dice roll.</p>
                   <Link to="/register" className="w-full">
                     <Button variant="neon" className="w-full">Register Team</Button>
                   </Link>
@@ -242,7 +329,7 @@ export default function DashboardPage() {
                   Join the official HackFusion 2.0 WhatsApp group for live updates, announcements, and coordination.
                 </p>
                 <a
-                  href="https://chat.whatsapp.com/YOUR_GROUP_LINK_HERE"
+                  href="https://chat.whatsapp.com/EkDNcRUWaUC3JoFxVlnldF?mode=gi_t"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl transition-colors shadow-lg shadow-green-500/20"

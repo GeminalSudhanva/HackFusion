@@ -23,7 +23,7 @@ const fields = [
   { key: "fullName", label: "Full Name", icon: User, type: "text", placeholder: "John Doe" },
   { key: "collegeName", label: "College Name", icon: Building2, type: "text", placeholder: "AGM Rural College of Eng. & Tech." },
   { key: "email", label: "Email", icon: Mail, type: "email", placeholder: "you@example.com" },
-  { key: "phone", label: "Phone Number", icon: Phone, type: "tel", placeholder: "+91 98765 43210" },
+  { key: "phone", label: "Phone Number", icon: Phone, type: "tel", placeholder: "9876543210" },
   { key: "password", label: "Password", icon: Lock, type: "password", placeholder: "••••••••" },
   { key: "confirmPassword", label: "Confirm Password", icon: ShieldCheck, type: "password", placeholder: "••••••••" },
 ] as const;
@@ -51,6 +51,11 @@ export default function SignUpPage() {
       toast({ title: "Passwords don't match", variant: "destructive" });
       return;
     }
+    const phoneDigits = form.phone.replace(/\D/g, "");
+    if (phoneDigits.length !== 10) {
+      toast({ title: "Phone number must be exactly 10 digits", variant: "destructive" });
+      return;
+    }
     if (form.password.length < 6) {
       toast({ title: "Password must be at least 6 characters", variant: "destructive" });
       return;
@@ -72,7 +77,14 @@ export default function SignUpPage() {
     }
   };
 
-  const update = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => setForm((f) => ({ ...f, [key]: e.target.value }));
+  const update = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value;
+    // For phone field, strip non-digits and limit to 10
+    if (key === "phone") {
+      value = value.replace(/\D/g, "").slice(0, 10);
+    }
+    setForm((f) => ({ ...f, [key]: value }));
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden py-24">
