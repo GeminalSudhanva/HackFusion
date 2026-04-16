@@ -11,7 +11,7 @@ const getAllTeamsWithRegistrations = async (req, res) => {
           select: { name: true, email: true, phone: true }
         },
         members: {
-          select: { id: true, name: true, email: true, role: true, foodScans: true, kitReceived: true }
+          select: { id: true, name: true, email: true, role: true, mealsTaken: true, kitReceived: true }
         },
         registration: true
       },
@@ -33,6 +33,11 @@ const getAllTeamsWithRegistrations = async (req, res) => {
 const scanFoodUser = async (req, res) => {
   try {
     const { userId } = req.params;
+    const { mealType } = req.body;
+
+    if (!mealType) {
+      return res.status(400).json({ message: 'Meal type is required' });
+    }
 
     const userToScan = await prisma.user.findUnique({
       where: { id: userId },
@@ -49,23 +54,36 @@ const scanFoodUser = async (req, res) => {
       return res.status(400).json({ message: 'User team is not officially registered' });
     }
 
-    if (userToScan.foodScans >= 3) {
+    if (userToScan.mealsTaken.includes(mealType)) {
+      return res.status(400).json({ 
+        message: `${mealType} has already been consumed by this participant`,
+        teamName: userToScan.name,
+        mealsTaken: userToScan.mealsTaken 
+      });
+    }
+
+    if (userToScan.mealsTaken.length >= 3) {
       return res.status(400).json({ 
         message: 'Maximum meal limit (3/3) reached for this user',
-        teamName: userToScan.name, // Sending user's name but keeping variable name to avoid breaking frontend blindly
-        currentScans: userToScan.foodScans 
+        teamName: userToScan.name,
+        mealsTaken: userToScan.mealsTaken 
       });
     }
 
     const updatedUser = await prisma.user.update({
       where: { id: userId },
-      data: { foodScans: { increment: 1 } },
+      data: { 
+        mealsTaken: {
+          push: mealType
+        }
+      },
     });
 
     res.status(200).json({ 
-      message: `Food scan successful (${updatedUser.foodScans}/3)`,
-      teamName: updatedUser.name, // Keep variable name backwards compatible with scan screen
-      totalScans: updatedUser.foodScans 
+      message: `${mealType} logged successfully (${updatedUser.mealsTaken.length}/3)`,
+      teamName: updatedUser.name,
+      totalScans: updatedUser.mealsTaken.length,
+      mealsTaken: updatedUser.mealsTaken
     });
   } catch (error) {
     console.error('Scan Food Error:', error);
@@ -127,6 +145,28 @@ const toggleKitReceived = async (req, res) => {
   }
 };
 
+// @desc    Get individual user scan details
+// @route   GET /api/admin/user-scan/:userId
+// @access  Private/Admin
+const getUserScanDetails = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const userToScan = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true, name: true, mealsTaken: true, kitReceived: true }
+    });
+
+    if (!userToScan) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json(userToScan);
+  } catch (error) {
+    console.error('Fetch User Scan Details Error:', error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
 // @desc    Get team scan details
 // @route   GET /api/admin/team-scan/:teamId
 // @access  Private/Admin
@@ -141,7 +181,7 @@ const getTeamScanDetails = async (req, res) => {
           select: { id: true, name: true, email: true }
         },
         members: {
-          select: { id: true, name: true, email: true, role: true, kitReceived: true, foodScans: true }
+          select: { id: true, name: true, email: true, role: true, kitReceived: true, mealsTaken: true }
         },
         registration: true
       }
@@ -164,4 +204,5 @@ module.exports = {
   verifyPayment,
   toggleKitReceived,
   getTeamScanDetails,
+  getUserScanDetails,
 };

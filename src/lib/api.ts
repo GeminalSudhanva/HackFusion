@@ -123,12 +123,21 @@ export const API = {
     if (!res.ok) throw new Error((await res.json()).message || 'Fetch team scan details failed');
     return res.json();
   },
-  adminScanFood: async (userId: string) => {
+  adminGetUserScanDetails: async (userId: string) => {
+    const res = await fetch(`${BASE_URL}/admin/user-scan/${userId}`, {
+      method: 'GET',
+      headers: getHeaders(),
+    });
+    if (!res.ok) throw new Error((await res.json()).message || 'Fetch user scan details failed');
+    return res.json();
+  },
+  adminScanFood: async (userId: string, mealType: string) => {
     const res = await fetch(`${BASE_URL}/admin/scan-food/${userId}`, {
       method: 'POST',
       headers: getHeaders(),
+      body: JSON.stringify({ mealType }),
     });
-    if (!res.ok) throw new Error((await res.json()).message || 'Admin scan failed');
+    if (!res.ok) throw new Error((await res.json()).message || 'Food scan failed');
     return res.json();
   },
   adminVerifyPayment: async (registrationId: string) => {

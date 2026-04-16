@@ -191,7 +191,11 @@ export default function DashboardPage() {
                     </div>
                     <div className="p-3 bg-white/5 rounded-lg border border-white/5">
                       <p className="text-[10px] text-muted-foreground uppercase">Status</p>
-                      <p className="text-xs font-bold text-green-500 capitalize">{registration.status}</p>
+                      <p className={`text-xs font-bold capitalize ${
+                        registration.paymentStatus === 'verified' ? "text-green-500" : "text-yellow-500 animate-pulse"
+                      }`}>
+                        {registration.paymentStatus === 'verified' ? "Payment Verified" : "Pending Verification"}
+                      </p>
                     </div>
                   </div>
 

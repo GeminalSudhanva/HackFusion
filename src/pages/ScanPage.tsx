@@ -29,6 +29,7 @@ export default function ScanPage() {
   const [message, setMessage] = useState("");
   const [details, setDetails] = useState<any>(null);
   const [teamData, setTeamData] = useState<any>(null);
+  const [userData, setUserData] = useState<any>(null);
 
   useEffect(() => {
     if (!userId && !teamId) {
@@ -41,6 +42,8 @@ export default function ScanPage() {
       processTeamScan();
     } else if (scanType === "kit" && userId) {
       processKitScan();
+    } else if (scanType === "food" && userId) {
+       processUserScanInit();
     } else if (scanType === "food" && !userId) {
        setStatus("error");
        setMessage("Individual User ID required for food scans");
@@ -59,6 +62,18 @@ export default function ScanPage() {
     }
   }
 
+  async function processUserScanInit() {
+    setStatus("loading");
+    try {
+      const res = await API.adminGetUserScanDetails(userId!);
+      setUserData(res);
+      setStatus("selecting");
+    } catch (error: any) {
+      setStatus("error");
+      setMessage(error.message || "Failed to fetch user details");
+    }
+  }
+
   async function toggleMemberKit(uid: string) {
     try {
       const res = await API.adminToggleKit(uid);
@@ -74,14 +89,14 @@ export default function ScanPage() {
     }
   }
 
-  async function processFoodScan() {
+  async function processFoodScan(mealType: string) {
     setStatus("loading");
     try {
-      const res = await API.adminScanFood(userId!);
+      const res = await API.adminScanFood(userId!, mealType);
       setStatus("success");
-      setMessage(`${selectedMeal} — ${res.message}`);
+      setMessage(`${mealType} — ${res.message}`);
       setDetails(res);
-      toast({ title: `${selectedMeal} Logged ✅`, description: res.message });
+      toast({ title: `${mealType} Logged ✅`, description: res.message });
     } catch (error: any) {
       setStatus("error");
       setMessage(error.message || "Failed to process scan");
@@ -142,7 +157,7 @@ export default function ScanPage() {
                     <div key={m.id} className="flex items-center justify-between p-4 bg-secondary/20 rounded-2xl border border-white/5">
                       <div className="text-left">
                          <p className="text-sm font-bold text-white">{m.name}</p>
-                         <p className="text-[10px] text-muted-foreground">Food: {m.foodScans}/3</p>
+                         <p className="text-[10px] text-muted-foreground">Food: {m.mealsTaken?.length || 0}/3</p>
                       </div>
                       <Button
                         size="sm"
@@ -160,31 +175,37 @@ export default function ScanPage() {
           )}
 
           {/* MEAL TYPE SELECTION (Food scans only) */}
-          {status === "selecting" && (
+          {status === "selecting" && userData && (
             <div className="py-4 space-y-6">
               <div className="relative inline-block">
                 <Utensils className="w-16 h-16 text-primary mx-auto" />
               </div>
               <div className="space-y-2">
                 <h1 className="text-2xl font-black text-white">Select Meal Type</h1>
-                <p className="text-muted-foreground text-sm">Choose the meal being served right now</p>
+                <p className="text-muted-foreground text-sm">Choose the meal for <span className="text-white font-bold">{userData.name}</span></p>
               </div>
               <div className="space-y-3">
-                {MEAL_OPTIONS.map((meal) => (
-                  <button
-                    key={meal.type}
-                    onClick={() => {
-                      setSelectedMeal(meal.type);
-                      processFoodScan();
-                    }}
-                    className={`w-full flex items-center gap-4 p-4 rounded-xl border transition-all ${meal.bg}`}
-                  >
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${meal.bg}`}>
-                      <meal.icon className={`w-6 h-6 ${meal.color}`} />
-                    </div>
-                    <span className="text-white font-bold text-lg">{meal.type}</span>
-                  </button>
-                ))}
+                {MEAL_OPTIONS.filter(m => !userData.mealsTaken.includes(m.type)).length > 0 ? (
+                  MEAL_OPTIONS.filter(m => !userData.mealsTaken.includes(m.type)).map((meal) => (
+                    <button
+                      key={meal.type}
+                      onClick={() => {
+                        setSelectedMeal(meal.type);
+                        processFoodScan(meal.type);
+                      }}
+                      className={`w-full flex items-center gap-4 p-4 rounded-xl border transition-all ${meal.bg}`}
+                    >
+                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${meal.bg}`}>
+                        <meal.icon className={`w-6 h-6 ${meal.color}`} />
+                      </div>
+                      <span className="text-white font-bold text-lg">{meal.type}</span>
+                    </button>
+                  ))
+                ) : (
+                  <div className="p-6 bg-destructive/10 border border-destructive/20 rounded-2xl">
+                    <p className="text-destructive font-bold">All meals (3/3) have been consumed.</p>
+                  </div>
+                )}
               </div>
             </div>
           )}
