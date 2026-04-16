@@ -172,15 +172,15 @@ export default function AdminDashboard() {
                           <button
                             onClick={() => kitMutation.mutate(m.id)}
                             disabled={kitMutation.isPending}
-                            title={m.kitReceived ? 'Mark as NOT received' : 'Mark as received'}
+                            title={m.kitReceived === true ? 'Mark as NOT received' : 'Mark as received'}
                             className={`flex items-center gap-1 px-1.5 py-0.5 rounded border transition-colors ${
-                              m.kitReceived
+                              m.kitReceived === true
                                 ? 'bg-green-500/20 border-green-500/40 text-green-400 hover:bg-red-500/20 hover:border-red-500/40 hover:text-red-400'
                                 : 'bg-muted border-border text-muted-foreground hover:bg-green-500/20 hover:border-green-500/40 hover:text-green-400'
                             }`}
                           >
                             <Package className="h-2.5 w-2.5" />
-                            {m.kitReceived ? 'Yes' : 'No'}
+                            {m.kitReceived === true ? 'Yes' : 'No'}
                           </button>
                         </div>
                       ))}

@@ -162,11 +162,11 @@ export default function ScanPage() {
                       </div>
                       <Button
                         size="sm"
-                        variant={m.kitReceived ? "default" : "outline"}
-                        className={m.kitReceived ? "bg-green-500/20 text-green-500 border-green-500/40 hover:bg-red-500/20 hover:text-red-400" : ""}
+                        variant={m.kitReceived === true ? "default" : "outline"}
+                        className={m.kitReceived === true ? "bg-green-500/20 text-green-400 border-green-500/40 hover:bg-red-500/20 hover:text-red-400" : ""}
                         onClick={() => toggleMemberKit(m.id)}
                       >
-                         {m.kitReceived ? <><Package className="w-3 h-3 mr-1" /> Received</> : "Mark Kit"}
+                         {m.kitReceived === true ? <><Package className="w-3 h-3 mr-1" /> Received</> : "Mark Kit"}
                       </Button>
                     </div>
                   ))}
