@@ -62,9 +62,9 @@ const scanFoodUser = async (req, res) => {
       });
     }
 
-    if (userToScan.mealsTaken.length >= 3) {
+    if (userToScan.mealsTaken.length >= 4) {
       return res.status(400).json({ 
-        message: 'Maximum meal limit (3/3) reached for this user',
+        message: 'Maximum meal limit (4/4) reached for this user',
         teamName: userToScan.name,
         mealsTaken: userToScan.mealsTaken 
       });
@@ -80,7 +80,7 @@ const scanFoodUser = async (req, res) => {
     });
 
     res.status(200).json({ 
-      message: `${mealType} logged successfully (${updatedUser.mealsTaken.length}/3)`,
+      message: `${mealType} logged successfully (${updatedUser.mealsTaken.length}/4)`,
       teamName: updatedUser.name,
       totalScans: updatedUser.mealsTaken.length,
       mealsTaken: updatedUser.mealsTaken

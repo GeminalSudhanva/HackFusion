@@ -7,9 +7,10 @@ import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 
 const MEAL_OPTIONS = [
-  { type: "Breakfast", icon: Coffee, color: "text-orange-400", bg: "bg-orange-500/10 border-orange-500/30 hover:bg-orange-500/20" },
-  { type: "Lunch", icon: Sun, color: "text-yellow-400", bg: "bg-yellow-500/10 border-yellow-500/30 hover:bg-yellow-500/20" },
-  { type: "Dinner", icon: Moon, color: "text-blue-400", bg: "bg-blue-500/10 border-blue-500/30 hover:bg-blue-500/20" },
+  { type: "May 5 Lunch", icon: Sun, color: "text-yellow-400", bg: "bg-yellow-500/10 border-yellow-500/30 hover:bg-yellow-500/20" },
+  { type: "May 5 Dinner", icon: Moon, color: "text-blue-400", bg: "bg-blue-500/10 border-blue-500/30 hover:bg-blue-500/20" },
+  { type: "May 6 Breakfast", icon: Coffee, color: "text-orange-400", bg: "bg-orange-500/10 border-orange-500/30 hover:bg-orange-500/20" },
+  { type: "May 6 Lunch", icon: Sun, color: "text-yellow-400", bg: "bg-yellow-500/10 border-yellow-500/30 hover:bg-yellow-500/20" },
 ];
 
 export default function ScanPage() {
@@ -203,7 +204,7 @@ export default function ScanPage() {
                   ))
                 ) : (
                   <div className="p-6 bg-destructive/10 border border-destructive/20 rounded-2xl">
-                    <p className="text-destructive font-bold">All meals (3/3) have been consumed.</p>
+                    <p className="text-destructive font-bold">All meals (4/4) have been consumed.</p>
                   </div>
                 )}
               </div>
@@ -243,11 +244,11 @@ export default function ScanPage() {
                 <div className="pt-6 border-t border-white/10 grid grid-cols-2 gap-4">
                    <div className="bg-white/5 p-4 rounded-2xl">
                       <p className="text-xs text-muted-foreground uppercase">Remaining</p>
-                      <p className="text-2xl font-black text-white">{3 - (details?.totalScans || 0)}</p>
+                      <p className="text-2xl font-black text-white">{4 - (details?.totalScans || 0)}</p>
                    </div>
                    <div className="bg-white/5 p-4 rounded-2xl">
                       <p className="text-xs text-muted-foreground uppercase">Used</p>
-                      <p className="text-2xl font-black text-white">{details?.totalScans}/3</p>
+                      <p className="text-2xl font-black text-white">{details?.totalScans}/4</p>
                    </div>
                 </div>
               )}
@@ -273,9 +274,9 @@ export default function ScanPage() {
                 <h1 className="text-3xl font-black text-white uppercase tracking-tight">Access Denied</h1>
                 <p className="text-destructive/80 font-medium">{message}</p>
               </div>
-              {details?.currentScans === 3 && (
+              {details?.currentScans === 4 && (
                 <p className="text-sm text-muted-foreground bg-destructive/10 p-4 rounded-xl border border-destructive/20">
-                  This user has already consumed all 3 allocated meals.
+                  This user has already consumed all 4 allocated meals.
                 </p>
               )}
             </div>

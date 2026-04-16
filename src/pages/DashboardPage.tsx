@@ -229,7 +229,7 @@ export default function DashboardPage() {
                       </div>
                       <div className="text-left flex-1">
                         <p className="text-sm font-bold">Food QR</p>
-                        <p className="text-[10px] text-muted-foreground">Meal service (3 meals)</p>
+                        <p className="text-[10px] text-muted-foreground">Meal service (4 meals)</p>
                       </div>
                     </button>
                   </div>
@@ -248,7 +248,6 @@ export default function DashboardPage() {
                           <div className="flex items-center justify-between">
                             <p className="text-sm font-bold text-white flex items-center gap-2">
                               {activeQR === "team" && <><Users className="w-4 h-4 text-primary" /> Team QR</>}
-                              {activeQR === "kit" && <><Package className="w-4 h-4 text-orange-400" /> Kit QR</>}
                               {activeQR === "food" && <><Utensils className="w-4 h-4 text-green-400" /> Food QR</>}
                             </p>
                             <button onClick={() => setActiveQR(null)} className="text-muted-foreground hover:text-white transition-colors">
@@ -262,7 +261,6 @@ export default function DashboardPage() {
                              <QRCodeSVG 
                                value={
                                  activeQR === "team" ? teamScanLink :
-                                 activeQR === "kit" ? kitScanLink :
                                  foodScanLink
                                }
                                size={160} 
@@ -274,17 +272,15 @@ export default function DashboardPage() {
                              <div className="absolute inset-x-0 bottom-[-10px] flex justify-center">
                                 <span className={`text-background text-[10px] font-black px-3 py-1 rounded-full uppercase ${
                                   activeQR === "team" ? "bg-primary" :
-                                  activeQR === "kit" ? "bg-orange-500" :
                                   "bg-green-500"
                                 }`}>
-                                  {activeQR === "team" ? "Team" : activeQR === "kit" ? "Kit" : "Food"}
+                                  {activeQR === "team" ? "Team" : "Food"}
                                 </span>
                              </div>
                           </div>
                           <p className="text-[11px] text-muted-foreground pt-2">
-                            {activeQR === "team" && "Show this to admin for team verification."}
-                            {activeQR === "kit" && "Show this to receive your hackathon kit."}
-                            {activeQR === "food" && "Show this to the food counter staff (Limit: 3 meals/user)."}
+                            {activeQR === "team" && "Show this to admin for team verification & kits."}
+                            {activeQR === "food" && "Show this for meal service (Limit: 4 meals/user)."}
                           </p>
                         </div>
                       </motion.div>

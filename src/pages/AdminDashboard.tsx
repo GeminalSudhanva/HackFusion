@@ -148,8 +148,8 @@ export default function AdminDashboard() {
                         <div key={m.id} className="flex flex-col gap-0.5 border-b border-white/5 pb-1 last:border-0">
                           <div className="flex items-center justify-between gap-2 text-[10px]">
                             <span className="truncate max-w-[80px] font-medium text-white">{m.name.split(' ')[0]}</span>
-                            <span className={`font-bold px-1.5 py-0.5 rounded ${m.mealsTaken?.length >= 3 ? 'bg-destructive/20 text-destructive' : m.mealsTaken?.length > 0 ? 'bg-primary/20 text-primary' : 'bg-muted text-muted-foreground'}`}>
-                              {m.mealsTaken?.length || 0}/3
+                            <span className={`font-bold px-1.5 py-0.5 rounded ${m.mealsTaken?.length >= 4 ? 'bg-destructive/20 text-destructive' : m.mealsTaken?.length > 0 ? 'bg-primary/20 text-primary' : 'bg-muted text-muted-foreground'}`}>
+                              {m.mealsTaken?.length || 0}/4
                             </span>
                           </div>
                           {m.mealsTaken?.length > 0 && (
