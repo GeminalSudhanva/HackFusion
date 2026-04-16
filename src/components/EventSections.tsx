@@ -55,7 +55,7 @@ export function CollegeInfo() {
           <div className="relative rounded-3xl overflow-hidden border border-white/10 shadow-2xl group h-[320px]">
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10" />
             <img
-              src="/agmr.png"
+              src="/Agm college image.jpeg"
               alt="AGM Rural College Campus"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
               referrerPolicy="no-referrer"

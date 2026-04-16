@@ -413,7 +413,7 @@ export function CollegePreview() {
           <div className="relative rounded-3xl overflow-hidden border border-white/10 shadow-2xl group">
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10" />
             <img
-              src="/agmr.png"
+              src="/Agm college image.jpeg"
               alt="AGM Rural College Campus"
               className="w-full h-[400px] object-cover group-hover:scale-105 transition-transform duration-1000"
               referrerPolicy="no-referrer"
