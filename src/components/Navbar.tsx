@@ -30,6 +30,7 @@ export default function Navbar() {
           <Link to="/event" className="text-sm text-muted-foreground hover:text-primary transition-colors">Event</Link>
           <Link to="/accommodation" className="text-sm text-muted-foreground hover:text-primary transition-colors">Accommodation</Link>
           <Link to="/coordinators" className="text-sm text-muted-foreground hover:text-primary transition-colors">Coordinators</Link>
+          <Link to="/about" className="text-sm text-muted-foreground hover:text-primary transition-colors">Platform Developers</Link>
           {user ? (
             <>
               {user.role === 'admin' && (
@@ -66,6 +67,7 @@ export default function Navbar() {
           <Link to="/event" onClick={() => setOpen(false)} className="text-sm text-muted-foreground hover:text-primary">Event</Link>
           <Link to="/accommodation" onClick={() => setOpen(false)} className="text-sm text-muted-foreground hover:text-primary">Accommodation</Link>
           <Link to="/coordinators" onClick={() => setOpen(false)} className="text-sm text-muted-foreground hover:text-primary">Coordinators</Link>
+          <Link to="/about" onClick={() => setOpen(false)} className="text-sm text-muted-foreground hover:text-primary">Platform Developers</Link>
           {user ? (
             <>
               {user.role === 'admin' && (
