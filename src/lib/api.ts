@@ -115,6 +115,14 @@ export const API = {
     if (!res.ok) throw new Error((await res.json()).message || 'Admin fetch failed');
     return res.json();
   },
+  adminGetTeamScanDetails: async (teamId: string) => {
+    const res = await fetch(`${BASE_URL}/admin/team-scan/${teamId}`, {
+      method: 'GET',
+      headers: getHeaders(),
+    });
+    if (!res.ok) throw new Error((await res.json()).message || 'Fetch team scan details failed');
+    return res.json();
+  },
   adminScanFood: async (userId: string) => {
     const res = await fetch(`${BASE_URL}/admin/scan-food/${userId}`, {
       method: 'POST',

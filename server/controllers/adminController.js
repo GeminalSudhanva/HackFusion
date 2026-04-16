@@ -127,9 +127,41 @@ const toggleKitReceived = async (req, res) => {
   }
 };
 
+// @desc    Get team scan details
+// @route   GET /api/admin/team-scan/:teamId
+// @access  Private/Admin
+const getTeamScanDetails = async (req, res) => {
+  try {
+    const { teamId } = req.params;
+
+    const team = await prisma.team.findUnique({
+      where: { id: teamId },
+      include: {
+        leader: {
+          select: { id: true, name: true, email: true }
+        },
+        members: {
+          select: { id: true, name: true, email: true, role: true, kitReceived: true, foodScans: true }
+        },
+        registration: true
+      }
+    });
+
+    if (!team) {
+      return res.status(404).json({ message: 'Team not found' });
+    }
+
+    res.status(200).json(team);
+  } catch (error) {
+    console.error('Fetch Team Scan Details Error:', error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
 module.exports = {
   getAllTeamsWithRegistrations,
   scanFoodUser,
   verifyPayment,
   toggleKitReceived,
+  getTeamScanDetails,
 };

@@ -29,7 +29,7 @@ export default function RegisterPage() {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-  
+
   const [selectedDomain, setSelectedDomain] = useState("");
   const [utrNumber, setUtrNumber] = useState("");
   const [step, setStep] = useState(1);
@@ -54,13 +54,13 @@ export default function RegisterPage() {
 
   async function checkTeam() {
     if (!user) return;
-    
+
     if (!user.teamId) {
       toast({ title: "Join a team first", variant: "destructive" });
       navigate("/teams");
       return;
     }
-    
+
     if (user.role !== 'leader') {
       toast({ title: "Only team leaders can register", variant: "destructive" });
       navigate("/dashboard");
@@ -75,7 +75,7 @@ export default function RegisterPage() {
         return;
       }
     } catch (e) {
-       // Proceed (Not registered yet)
+      // Proceed (Not registered yet)
     }
 
     setLoading(false);
@@ -162,7 +162,7 @@ export default function RegisterPage() {
         </motion.div>
 
         {/* STEP 1: SELECT DOMAIN */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
           className={`rounded-3xl overflow-hidden mb-8 transition-all duration-500 ${step !== 1 ? 'opacity-40 scale-[0.98] pointer-events-none' : ''}`}
@@ -182,7 +182,7 @@ export default function RegisterPage() {
                   </Button>
                 )}
               </div>
-              
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {DOMAINS.map((d) => (
                   <motion.button
@@ -195,15 +195,13 @@ export default function RegisterPage() {
                       setStep(2);
                     }}
                     disabled={step > 1 && selectedDomain !== d.value}
-                    className={`relative flex flex-col items-start gap-3 p-5 rounded-2xl border transition-all text-left overflow-hidden group ${
-                      selectedDomain === d.value
+                    className={`relative flex flex-col items-start gap-3 p-5 rounded-2xl border transition-all text-left overflow-hidden group ${selectedDomain === d.value
                         ? `bg-gradient-to-br ${d.gradient} ${d.border} shadow-[0_0_30px_-10px_rgba(0,255,255,0.3)]`
                         : "border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/8"
-                    }`}
+                      }`}
                   >
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center border ${
-                      selectedDomain === d.value ? `${d.border} bg-white/10` : "border-white/10 bg-white/5"
-                    } group-hover:scale-110 transition-transform`}>
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center border ${selectedDomain === d.value ? `${d.border} bg-white/10` : "border-white/10 bg-white/5"
+                      } group-hover:scale-110 transition-transform`}>
                       <d.icon className={`h-6 w-6 ${selectedDomain === d.value ? d.accent : "text-gray-400 group-hover:text-white"} transition-colors`} />
                     </div>
                     <div>
@@ -229,9 +227,9 @@ export default function RegisterPage() {
         {/* STEP 2: PAYMENT & UTR */}
         <AnimatePresence>
           {step === 2 && (
-            <motion.div 
-              initial={{ opacity: 0, height: 0, y: 20 }} 
-              animate={{ opacity: 1, height: 'auto', y: 0 }} 
+            <motion.div
+              initial={{ opacity: 0, height: 0, y: 20 }}
+              animate={{ opacity: 1, height: 'auto', y: 0 }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.5, ease: "easeOut" }}
               className="rounded-3xl overflow-hidden relative"
@@ -251,7 +249,7 @@ export default function RegisterPage() {
                     <span className="text-gray-400 text-xs uppercase tracking-[0.2em] mb-3 font-semibold">Total Amount Due</span>
                     <div className="text-5xl font-extrabold text-white tracking-tight mb-1 flex items-start justify-center">
                       <span className="text-2xl mt-1 mr-1 text-primary font-display">₹</span>
-                      <span className="font-display">600</span>
+                      <span className="font-display">800</span>
                     </div>
                     <p className="text-xs text-gray-400 max-w-xs mt-3 leading-relaxed">
                       Scan the QR code below and complete payment, then enter your UTR number
@@ -269,9 +267,9 @@ export default function RegisterPage() {
                       transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
                       className="relative p-3 bg-white rounded-2xl shadow-[0_0_40px_-10px_rgba(0,255,255,0.2)]"
                     >
-                      <img 
-                        src="/Payment Recieve QR.jpeg" 
-                        alt="Payment QR Code" 
+                      <img
+                        src="/Payment Recieve QR.jpeg"
+                        alt="Payment QR Code"
                         className="w-48 h-48 object-cover rounded-xl"
                         onError={(e) => {
                           (e.target as HTMLImageElement).src = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=dummy@upi&pn=HackFusion&am=600.00&cu=INR';
@@ -288,10 +286,10 @@ export default function RegisterPage() {
                         Enter UTR Number <span className="text-red-500">*</span>
                       </Label>
                       <div className={`relative rounded-xl transition-all duration-300 ${focused ? "shadow-[0_0_20px_-5px_rgba(0,255,255,0.2)]" : ""}`}>
-                        <Input 
+                        <Input
                           id="utr"
-                          type="text" 
-                          placeholder="e.g. 301234567890" 
+                          type="text"
+                          placeholder="e.g. 301234567890"
                           value={utrNumber}
                           onChange={(e) => setUtrNumber(e.target.value)}
                           onFocus={() => setFocused(true)}
@@ -300,11 +298,11 @@ export default function RegisterPage() {
                         />
                       </div>
                     </div>
-                    
-                    <Button 
-                      variant="neon" 
-                      className="w-full h-13 text-base rounded-xl py-6 relative overflow-hidden group shadow-[0_0_30px_-8px_rgba(0,255,255,0.4)] hover:shadow-[0_0_40px_-5px_rgba(0,255,255,0.5)] transition-shadow" 
-                      onClick={handleRegister} 
+
+                    <Button
+                      variant="neon"
+                      className="w-full h-13 text-base rounded-xl py-6 relative overflow-hidden group shadow-[0_0_30px_-8px_rgba(0,255,255,0.4)] hover:shadow-[0_0_40px_-5px_rgba(0,255,255,0.5)] transition-shadow"
+                      onClick={handleRegister}
                       disabled={!utrNumber || utrNumber.length < 5 || submitting}
                     >
                       <span className="relative z-10 flex items-center justify-center gap-2">

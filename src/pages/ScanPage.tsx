@@ -15,28 +15,64 @@ const MEAL_OPTIONS = [
 export default function ScanPage() {
   const [searchParams] = useSearchParams();
   const userId = searchParams.get("userId");
-  const scanType = searchParams.get("type") || "food"; // "food" or "kit"
+  const teamId = searchParams.get("teamId");
+  const scanType = searchParams.get("type") || "food"; // "food", "kit", or "team"
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const [status, setStatus] = useState<"selecting" | "loading" | "success" | "error">(
-    scanType === "kit" ? "loading" : "selecting"
+  const [status, setStatus] = useState<"selecting" | "loading" | "success" | "error" | "team">(
+    scanType === "kit" ? "loading" : 
+    scanType === "team" ? "loading" :
+    "selecting"
   );
   const [selectedMeal, setSelectedMeal] = useState("");
   const [message, setMessage] = useState("");
   const [details, setDetails] = useState<any>(null);
+  const [teamData, setTeamData] = useState<any>(null);
 
   useEffect(() => {
-    if (!userId) {
+    if (!userId && !teamId) {
       setStatus("error");
-      setMessage("No User ID found in QR code");
+      setMessage("No ID found in QR code");
       return;
     }
-    // For kit scans, process immediately
-    if (scanType === "kit") {
+
+    if (scanType === "team" && teamId) {
+      processTeamScan();
+    } else if (scanType === "kit" && userId) {
       processKitScan();
+    } else if (scanType === "food" && !userId) {
+       setStatus("error");
+       setMessage("Individual User ID required for food scans");
     }
-  }, [userId, scanType]);
+  }, [userId, teamId, scanType]);
+
+  async function processTeamScan() {
+    setStatus("loading");
+    try {
+      const res = await API.adminGetTeamScanDetails(teamId!);
+      setTeamData(res);
+      setStatus("team");
+    } catch (error: any) {
+      setStatus("error");
+      setMessage(error.message || "Failed to fetch team details");
+    }
+  }
+
+  async function toggleMemberKit(uid: string) {
+    try {
+      const res = await API.adminToggleKit(uid);
+      setTeamData((prev: any) => ({
+        ...prev,
+        members: prev.members.map((m: any) => 
+          m.id === uid ? { ...m, kitReceived: res.kitReceived } : m
+        )
+      }));
+      toast({ title: "Status Updated", description: res.message });
+    } catch (error: any) {
+      toast({ title: "Update Failed", description: error.message, variant: "destructive" });
+    }
+  }
 
   async function processFoodScan() {
     setStatus("loading");
@@ -76,8 +112,53 @@ export default function ScanPage() {
            initial={{ opacity: 0, scale: 0.9 }}
            animate={{ opacity: 1, scale: 1 }}
            exit={{ opacity: 0, scale: 0.9 }}
-           className="glass-card max-w-md w-full p-8 text-center space-y-6 relative overflow-hidden"
+           className={`glass-card ${status === 'team' ? 'max-w-xl' : 'max-w-md'} w-full p-8 text-center space-y-6 relative overflow-hidden`}
         >
+          {/* TEAM SCAN VIEW */}
+          {status === "team" && teamData && (
+            <div className="space-y-6">
+              <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                 <div className="text-left">
+                    <h1 className="text-2xl font-black text-white leading-tight">{teamData.teamName}</h1>
+                    <p className="text-primary text-xs font-bold uppercase tracking-widest">{teamData.registration?.domain || "General"} Category</p>
+                 </div>
+                 <div className="bg-primary/20 p-2 rounded-lg border border-primary/30">
+                    <Users className="w-6 h-6 text-primary" />
+                 </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-4">
+                <div className="p-4 bg-white/5 rounded-2xl border border-white/5 text-left flex items-center justify-between">
+                   <div>
+                      <p className="text-[10px] text-muted-foreground uppercase font-bold">Leader</p>
+                      <p className="text-white font-bold">{teamData.leader.name}</p>
+                   </div>
+                   <ShieldCheck className="w-5 h-5 text-green-500" />
+                </div>
+                
+                <div className="space-y-3">
+                  <p className="text-[10px] text-muted-foreground uppercase font-bold text-left px-1">Mark Kit Distribution</p>
+                  {teamData.members.map((m: any) => (
+                    <div key={m.id} className="flex items-center justify-between p-4 bg-secondary/20 rounded-2xl border border-white/5">
+                      <div className="text-left">
+                         <p className="text-sm font-bold text-white">{m.name}</p>
+                         <p className="text-[10px] text-muted-foreground">Food: {m.foodScans}/3</p>
+                      </div>
+                      <Button
+                        size="sm"
+                        variant={m.kitReceived ? "default" : "outline"}
+                        className={m.kitReceived ? "bg-green-500/20 text-green-500 border-green-500/40 hover:bg-red-500/20 hover:text-red-400" : ""}
+                        onClick={() => toggleMemberKit(m.id)}
+                      >
+                         {m.kitReceived ? <><Package className="w-3 h-3 mr-1" /> Received</> : "Mark Kit"}
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* MEAL TYPE SELECTION (Food scans only) */}
           {status === "selecting" && (
             <div className="py-4 space-y-6">
@@ -113,7 +194,7 @@ export default function ScanPage() {
             <div className="py-12 flex flex-col items-center gap-4">
               <Loader2 className="w-16 h-16 text-primary animate-spin" />
               <p className="text-muted-foreground animate-pulse">
-                {scanType === "kit" ? "Processing Kit QR..." : "Processing Food QR..."}
+                Processing {scanType === "team" ? "Team Info" : scanType === "kit" ? "Kit" : "Food"}...
               </p>
             </div>
           )}

@@ -210,22 +210,7 @@ export default function DashboardPage() {
                       </div>
                       <div className="text-left flex-1">
                         <p className="text-sm font-bold">Team QR</p>
-                        <p className="text-[10px] text-muted-foreground">Team registration QR</p>
-                      </div>
-                    </button>
-
-                    <button
-                      onClick={() => setActiveQR(activeQR === "kit" ? null : "kit")}
-                      className={`w-full flex items-center gap-3 p-3 rounded-xl border transition-all ${
-                        activeQR === "kit" ? "bg-orange-500/10 border-orange-500/30 text-orange-400" : "bg-white/5 border-white/10 text-white hover:bg-white/10"
-                      }`}
-                    >
-                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${activeQR === "kit" ? "bg-orange-500/20" : "bg-white/10"}`}>
-                        <Package className="w-5 h-5" />
-                      </div>
-                      <div className="text-left flex-1">
-                        <p className="text-sm font-bold">Kit QR</p>
-                        <p className="text-[10px] text-muted-foreground">Scan to receive your kit</p>
+                        <p className="text-[10px] text-muted-foreground">Team registration & Kit distribution</p>
                       </div>
                     </button>
 
