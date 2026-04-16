@@ -130,7 +130,7 @@ export function FeesAndPrizes() {
             <div className="space-y-4 text-gray-300">
               <div className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10">
                 <span className="text-sm font-medium">Per Team</span>
-                <span className="font-display text-2xl font-black text-primary">₹600</span>
+                <span className="font-display text-2xl font-black text-primary">₹800</span>
               </div>
               <p className="text-sm text-gray-400">Payment via UPI/QR. Submit UTR number on the registration page after payment is complete.</p>
               <div className="flex items-start gap-2 p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20">

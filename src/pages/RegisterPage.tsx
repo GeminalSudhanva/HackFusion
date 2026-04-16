@@ -272,7 +272,7 @@ export default function RegisterPage() {
                         alt="Payment QR Code"
                         className="w-48 h-48 object-cover rounded-xl"
                         onError={(e) => {
-                          (e.target as HTMLImageElement).src = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=dummy@upi&pn=HackFusion&am=600.00&cu=INR';
+                          (e.target as HTMLImageElement).src = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=dummy@upi&pn=HackFusion&am=800.00&cu=INR';
                         }}
                       />
                     </motion.div>
