@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { motion } from "framer-motion";
-import { Phone, Users, Bed, Code2, Megaphone, ShieldCheck } from "lucide-react";
+import { Phone, Users, Bed, Code2, Megaphone, ShieldCheck, MessageSquare } from "lucide-react";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -293,11 +293,13 @@ export default function CoordinatorsPage() {
             If you face any emergency during the event, contact the Lead Coordinator directly or approach any volunteer on campus.
           </p>
           <a
-            href="tel:+919611103853"
-            className="inline-flex items-center gap-2 bg-primary hover:bg-primary/80 text-background font-bold px-8 py-3 rounded-xl transition-colors shadow-lg shadow-primary/20"
+            href="https://wa.me/919611103853"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#25D366]/90 text-white font-bold px-8 py-3 rounded-xl transition-colors shadow-lg shadow-[#25D366]/20"
           >
-            <Phone className="w-5 h-5" />
-            Call Lead Coordinator
+            <MessageSquare className="w-5 h-5" />
+            WhatsApp Lead Coordinator
           </a>
         </motion.div>
       </section>
