@@ -474,9 +474,19 @@ export function FinalCTA() {
       {/* Footer */}
       <footer className="mt-20 pt-8 border-t border-white/5 text-center">
         <p className="text-white/30 text-sm">© 2026 AGRATA 2K26 — HackFusion 2.0. All rights reserved.</p>
-        <Link to="/about" className="text-white/20 hover:text-primary text-xs transition-colors mt-2 inline-block">
-          Platform Developers
-        </Link>
+        <div className="flex flex-col items-center gap-1 mt-2">
+          <Link to="/about" className="text-white/20 hover:text-primary text-[10px] transition-colors">
+            Platform Developers
+          </Link>
+          <a 
+            href="https://geminal-studios.vercel.app/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-white/10 hover:text-white/30 text-[9px] transition-colors"
+          >
+            created the website in association with <span className="underline decoration-white/5">Geminal Studios</span>
+          </a>
+        </div>
       </footer>
     </section>
   );
