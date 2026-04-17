@@ -2,7 +2,16 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { API } from "@/lib/api";
 import { useAuth } from "@/lib/auth-context";
 import { Navigate } from "react-router-dom";
-import { Users, ShieldCheck, Mail, CheckCircle2, Clock, Package } from "lucide-react";
+import { useState, useMemo } from "react";
+import { Users, ShieldCheck, Mail, CheckCircle2, Clock, Package, Search, Filter, X } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -20,6 +29,10 @@ export default function AdminDashboard() {
   const { user, loading } = useAuth();
   const queryClient = useQueryClient();
   const { toast } = useToast();
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [paymentFilter, setPaymentFilter] = useState("all");
+  const [kitFilter, setKitFilter] = useState("all");
 
   const { data: teams, isLoading, error } = useQuery({
     queryKey: ["admin-teams"],
@@ -48,6 +61,26 @@ export default function AdminDashboard() {
       toast({ title: "Kit Toggle Failed", description: err.message, variant: "destructive" });
     }
   });
+  const filteredTeams = useMemo(() => {
+    if (!teams) return [];
+    
+    return teams.filter((team: any) => {
+      // Search by team name
+      const matchesSearch = team.teamName.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      // Payment Filter
+      const status = team.registration?.paymentStatus || 'pending';
+      const matchesPayment = paymentFilter === "all" || status === paymentFilter;
+      
+      // Kit Filter
+      const allKitsReceived = team.members.length > 0 && team.members.every((m: any) => m.kitReceived === true);
+      const matchesKit = kitFilter === "all" || 
+        (kitFilter === "received" && allKitsReceived) ||
+        (kitFilter === "pending" && !allKitsReceived);
+        
+      return matchesSearch && matchesPayment && matchesKit;
+    });
+  }, [teams, searchQuery, paymentFilter, kitFilter]);
 
   if (loading) return <div className="pt-24 text-center">Checking authorization...</div>;
   if (!user || user.role !== "admin") return <Navigate to="/dashboard" replace />;
@@ -69,25 +102,102 @@ export default function AdminDashboard() {
       ) : error ? (
         <div className="text-center py-12 text-destructive">Error loading data. Make sure you are an admin.</div>
       ) : (
-        <div className="glass-card rounded-xl overflow-hidden border border-border/50">
-          <Table>
-            <TableCaption>A list of all teams in the hackathon.</TableCaption>
-            <TableHeader className="bg-muted/50">
-              <TableRow>
-                <TableHead className="w-[200px]">Team Name</TableHead>
-                <TableHead>Leader</TableHead>
-                <TableHead>Members</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Domain</TableHead>
-                <TableHead>Problem</TableHead>
-                <TableHead>Food Scans</TableHead>
-                <TableHead>Kit Received</TableHead>
-                <TableHead className="text-right">Payment</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {teams?.map((team: any) => (
-                <TableRow key={team.id} className="hover:bg-muted/30 transition-colors">
+        <div className="space-y-6">
+          {/* Controls Bar */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            {/* Search */}
+            <div className="md:col-span-2 relative group">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+              <Input
+                placeholder="Search team name..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 h-11 bg-white/5 border-white/10 focus:border-primary/50 transition-all rounded-xl"
+              />
+              {searchQuery && (
+                <button 
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-white/10 rounded-full text-muted-foreground transition-colors"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              )}
+            </div>
+
+            {/* Payment Filter */}
+            <div className="flex flex-col gap-1.5">
+              <Select value={paymentFilter} onValueChange={setPaymentFilter}>
+                <SelectTrigger className="h-11 bg-white/5 border-white/10 rounded-xl focus:ring-primary/50">
+                  <div className="flex items-center gap-2">
+                    <Filter className="h-3.5 w-3.5 text-muted-foreground" />
+                    <SelectValue placeholder="Payment Status" />
+                  </div>
+                </SelectTrigger>
+                <SelectContent className="bg-background/95 backdrop-blur-xl border-white/10">
+                  <SelectItem value="all">All Payments</SelectItem>
+                  <SelectItem value="verified">Verified Only</SelectItem>
+                  <SelectItem value="pending">Pending Only</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Kit Filter */}
+            <div className="flex flex-col gap-1.5">
+              <Select value={kitFilter} onValueChange={setKitFilter}>
+                <SelectTrigger className="h-11 bg-white/5 border-white/10 rounded-xl focus:ring-primary/50">
+                  <div className="flex items-center gap-2">
+                    <Package className="h-3.5 w-3.5 text-muted-foreground" />
+                    <SelectValue placeholder="Kit Status" />
+                  </div>
+                </SelectTrigger>
+                <SelectContent className="bg-background/95 backdrop-blur-xl border-white/10">
+                  <SelectItem value="all">All Kit Status</SelectItem>
+                  <SelectItem value="received">All Kits Received</SelectItem>
+                  <SelectItem value="pending">Pending Kits</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between px-1">
+             <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest">
+                Showing {filteredTeams.length} {filteredTeams.length === 1 ? 'Team' : 'Teams'}
+             </p>
+             {(searchQuery || paymentFilter !== "all" || kitFilter !== "all") && (
+               <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => {
+                  setSearchQuery("");
+                  setPaymentFilter("all");
+                  setKitFilter("all");
+                }}
+                className="h-7 text-[10px] text-primary hover:text-primary hover:bg-primary/10"
+               >
+                 Clear Filters
+               </Button>
+             )}
+          </div>
+
+          <div className="glass-card rounded-xl overflow-hidden border border-border/50">
+            <Table>
+              <TableCaption>A list of all teams in the hackathon.</TableCaption>
+              <TableHeader className="bg-muted/50">
+                <TableRow>
+                  <TableHead className="w-[200px]">Team Name</TableHead>
+                  <TableHead>Leader</TableHead>
+                  <TableHead>Members</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Domain</TableHead>
+                  <TableHead>Problem</TableHead>
+                  <TableHead>Food Scans</TableHead>
+                  <TableHead>Kit Received</TableHead>
+                  <TableHead className="text-right">Payment</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredTeams.map((team: any) => (
+                  <TableRow key={team.id} className="hover:bg-muted/30 transition-colors">
                   <TableCell className="font-medium">
                     <div className="flex flex-col">
                       <span>{team.teamName}</span>
@@ -221,15 +331,31 @@ export default function AdminDashboard() {
                   </TableCell>
                 </TableRow>
               ))}
-              {teams?.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={9} className="text-center py-12 text-muted-foreground text-sm italic">
-                    No teams registered yet.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+              </TableBody>
+            </Table>
+          </div>
+
+          {filteredTeams.length === 0 && (
+            <div className="text-center py-24 glass-card rounded-xl border border-dashed border-white/10">
+              <div className="h-12 w-12 rounded-full bg-muted/50 flex items-center justify-center mx-auto mb-4">
+                <Search className="h-6 w-6 text-muted-foreground" />
+              </div>
+              <h3 className="text-lg font-bold text-white mb-1">No teams found</h3>
+              <p className="text-sm text-muted-foreground">Try adjusting your search or filters to find what you're looking for.</p>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => {
+                  setSearchQuery("");
+                  setPaymentFilter("all");
+                  setKitFilter("all");
+                }}
+                className="mt-6 font-bold"
+              >
+                Reset all filters
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </div>
