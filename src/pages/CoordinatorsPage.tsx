@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { motion } from "framer-motion";
-import { Phone, Users, Bed, Code2, Megaphone, ShieldCheck, MessageSquare } from "lucide-react";
+import { Phone, Users, Bed, Code2, Megaphone, MessageSquare } from "lucide-react";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -21,22 +21,7 @@ interface Coordinator {
 }
 
 const coordinators: { category: string; icon: any; accent: string; members: Coordinator[] }[] = [
-  {
-    category: "Overall Coordination",
-    icon: ShieldCheck,
-    accent: "text-primary",
-    members: [
-      {
-        name: "Sanjeev Nadgir",
-        phone: "+919611103853",
-        role: "Lead Coordinator",
-        team: "Core Team",
-        color: "text-primary",
-        iconBg: "bg-primary/10 border-primary/20",
-        borderColor: "border-primary/20",
-      },
-    ],
-  },
+
   {
     category: "Accommodation Team",
     icon: Bed,
@@ -88,6 +73,15 @@ const coordinators: { category: string; icon: any; accent: string; members: Coor
       {
         name: "Parashuram Gatti",
         phone: "+918073575635",
+        role: "Technical Lead",
+        team: "Tech Team",
+        color: "text-green-400",
+        iconBg: "bg-green-500/10 border-green-500/20",
+        borderColor: "border-green-500/20",
+      },
+      {
+        name: "Sanjeev Nadgir",
+        phone: "+919611103853",
         role: "Technical Lead",
         team: "Tech Team",
         color: "text-green-400",
