@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { motion } from "framer-motion";
-import { Phone, Users, Bed, Code2, Megaphone, MessageSquare } from "lucide-react";
+import { Phone, Users, Bed, Code2, Megaphone, MessageSquare, Truck } from "lucide-react";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -182,6 +182,31 @@ const coordinators: { category: string; icon: any; accent: string; members: Coor
         color: "text-purple-400",
         iconBg: "bg-purple-500/10 border-purple-500/20",
         borderColor: "border-purple-500/20",
+      },
+    ],
+  },
+  {
+    category: "Transportation Coordinators",
+    icon: Truck,
+    accent: "text-yellow-400",
+    members: [
+      {
+        name: "Vinayak",
+        phone: "+919113681080",
+        role: "Transportation Coordinator",
+        team: "Transportation",
+        color: "text-yellow-400",
+        iconBg: "bg-yellow-500/10 border-yellow-500/20",
+        borderColor: "border-yellow-500/20",
+      },
+      {
+        name: "Bhavani Dengi",
+        phone: "+917204005783",
+        role: "Transportation Coordinator",
+        team: "Transportation",
+        color: "text-yellow-400",
+        iconBg: "bg-yellow-500/10 border-yellow-500/20",
+        borderColor: "border-yellow-500/20",
       },
     ],
   },
