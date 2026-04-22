@@ -167,27 +167,44 @@ export default function DashboardPage() {
 
             {/* Quick Action Link */}
             {!registration && (
-              <div className="mt-6 flex items-center justify-between p-3 px-4 bg-primary/5 rounded-xl border border-primary/20">
-                <div className="flex items-center gap-3">
-                  <AlertCircle className="w-4 h-4 text-primary animate-pulse" />
-                  <p className="text-xs text-primary/80 font-medium">
-                    {!myTeam ? "Start by joining or creating a team to participate." :
-                      isLeader ? "Complete team registration to secure your spot!" :
-                        "Waiting for your team leader to complete registration."}
-                  </p>
+              <div className="mt-6 space-y-3">
+                <div className="flex items-center justify-between p-3 px-4 bg-primary/5 rounded-xl border border-primary/20">
+                  <div className="flex items-center gap-3">
+                    <AlertCircle className="w-4 h-4 text-primary animate-pulse" />
+                    <p className="text-xs text-primary/80 font-medium">
+                      {!myTeam ? "Start by joining or creating a team to participate." :
+                        isLeader ? "Complete team registration to secure your spot!" :
+                          "Waiting for your team leader to complete registration."}
+                    </p>
+                  </div>
+                  {!myTeam ? (
+                    <Link to="/teams">
+                      <Button variant="link" size="sm" className="text-primary hover:text-white p-0 h-auto text-xs flex items-center gap-1">
+                        Go to Teams <ChevronRight className="w-3 h-3" />
+                      </Button>
+                    </Link>
+                  ) : (isLeader && !registration) && (
+                    <Link to="/register">
+                      <Button variant="link" size="sm" className="text-primary hover:text-white p-0 h-auto text-xs flex items-center gap-1">
+                        Register Now <ChevronRight className="w-3 h-3" />
+                      </Button>
+                    </Link>
+                  )}
                 </div>
-                {!myTeam ? (
-                  <Link to="/teams">
-                    <Button variant="link" size="sm" className="text-primary hover:text-white p-0 h-auto text-xs flex items-center gap-1">
-                      Go to Teams <ChevronRight className="w-3 h-3" />
-                    </Button>
-                  </Link>
-                ) : (isLeader && !registration) && (
-                  <Link to="/register">
-                    <Button variant="link" size="sm" className="text-primary hover:text-white p-0 h-auto text-xs flex items-center gap-1">
-                      Register Now <ChevronRight className="w-3 h-3" />
-                    </Button>
-                  </Link>
+
+                {!myTeam && (
+                  <motion.div 
+                    initial={{ opacity: 0 }} 
+                    animate={{ opacity: 1 }} 
+                    className="p-3 bg-yellow-500/5 border border-yellow-500/10 rounded-xl flex items-start gap-3"
+                  >
+                    <AlertCircle className="w-4 h-4 text-yellow-500 shrink-0 mt-0.5" />
+                    <div className="text-[10px] text-yellow-200/70 leading-relaxed">
+                      <strong className="text-yellow-500 block mb-0.5">Avoid Duplicate Teams!</strong>
+                      Only one person (the Leader) should "Create" a team. All other members must "Join" using the team code. 
+                      Creating multiple teams for the same group of people will lead to registration issues.
+                    </div>
+                  </motion.div>
                 )}
               </div>
             )}

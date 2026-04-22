@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/lib/auth-context";
 import { API } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Hash, UserCheck, UserX, Trash2, Copy, Lock, Share2 } from "lucide-react";
+import { Plus, Hash, UserCheck, UserX, Trash2, Copy, Lock, Share2, Shield, AlertCircle } from "lucide-react";
 
 export default function TeamsPage() {
   const { user, updateUserContext, loading: authLoading } = useAuth();
@@ -101,6 +101,50 @@ export default function TeamsPage() {
           className="font-display text-3xl font-bold gradient-text">
           Team Management
         </motion.h1>
+
+        {/* Getting Started Guide */}
+        {!myTeam && (
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ delay: 0.1 }}
+            className="glass-card overflow-hidden border-primary/20 relative"
+          >
+            <div className="bg-primary/5 p-4 border-b border-primary/10">
+              <h2 className="text-xs font-bold text-primary flex items-center gap-2 uppercase tracking-[0.2em]">
+                <Shield className="w-4 h-4" /> Team Management Guide
+              </h2>
+            </div>
+            <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="space-y-4">
+                <h3 className="text-[11px] font-black text-white uppercase flex items-center gap-2 tracking-wider">
+                    <span className="w-6 h-6 rounded-lg bg-primary/20 text-primary flex items-center justify-center text-[10px] border border-primary/20">1</span>
+                    For Team Leaders
+                </h3>
+                <p className="text-sm text-gray-400 leading-relaxed">
+                    Click <strong className="text-white">"Create Team"</strong> to get your unique Team Code. Share this code with your teammates (max 4 members).
+                </p>
+              </div>
+              <div className="space-y-4">
+                <h3 className="text-[11px] font-black text-white uppercase flex items-center gap-2 tracking-wider">
+                    <span className="w-6 h-6 rounded-lg bg-primary/20 text-primary flex items-center justify-center text-[10px] border border-primary/20">2</span>
+                    For Team Members
+                </h3>
+                <p className="text-sm text-gray-400 leading-relaxed">
+                    <strong className="text-white">Wait</strong> for your leader to share the code. Use <strong className="text-white">"Join with Code"</strong>. 
+                    Do <span className="text-red-400 font-black underline underline-offset-4">NOT</span> create a new team if you are joining one!
+                </p>
+              </div>
+            </div>
+            <div className="bg-yellow-500/5 p-4 px-6 border-t border-yellow-500/10 flex items-center gap-4">
+                <AlertCircle className="w-5 h-5 text-yellow-500 shrink-0" />
+                <p className="text-xs text-yellow-200/60 leading-tight italic">
+                   Important: Creating multiple teams for the same group of people will cause registration conflicts. 
+                   Each person must belong to exactly ONE team.
+                </p>
+            </div>
+          </motion.div>
+        )}
 
         {myTeam ? (
           <>
