@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth-context";
 import { API } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
-import { Users, Shield, CheckCircle, AlertCircle, UserPlus, Dice5, QrCode, Utensils, MessageCircle, Package, X } from "lucide-react";
+import { Users, Shield, CheckCircle, AlertCircle, UserPlus, Dice5, QrCode, Utensils, MessageCircle, Package, X, ClipboardCheck, Clock, ShieldCheck, ChevronRight } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 
 export default function DashboardPage() {
@@ -29,11 +29,11 @@ export default function DashboardPage() {
   async function loadData() {
     if (!user) return;
     setLoading(true);
-    
+
     try {
       const teamData = await API.getMyTeam();
       setMyTeam(teamData);
-      
+
       const regData = await API.getMyRegistration();
       setRegistration(regData);
     } catch (err: any) {
@@ -45,7 +45,7 @@ export default function DashboardPage() {
   const handleRollDice = async () => {
     if (isRolling) return;
     setIsRolling(true);
-    
+
     // Animation effect
     const interval = setInterval(() => {
       setDisplayDice(Math.floor(Math.random() * 15) + 1);
@@ -89,6 +89,111 @@ export default function DashboardPage() {
           Dashboard
         </motion.h1>
 
+        {/* Registration Workflow Instructions */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="glass-card overflow-hidden relative border-primary/20 shadow-[0_0_20px_rgba(var(--primary),0.05)]"
+        >
+          <div className="absolute top-0 right-0 p-8 opacity-5 pointer-events-none">
+            <ClipboardCheck className="w-32 h-32" />
+          </div>
+
+          <div className="p-6">
+            <h2 className="font-display text-sm font-bold text-primary mb-6 uppercase tracking-widest flex items-center gap-2">
+              <ClipboardCheck className="w-4 h-4" /> Registration Progress
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              {[
+                {
+                  id: 1,
+                  label: "Form Team",
+                  icon: Users,
+                  desc: "Create or join a team",
+                  status: myTeam ? 'completed' : 'current'
+                },
+                {
+                  id: 2,
+                  label: "Register",
+                  icon: UserPlus,
+                  desc: "Select domain & pay",
+                  status: registration ? 'completed' : (myTeam ? 'current' : 'pending')
+                },
+                {
+                  id: 3,
+                  label: "Verification",
+                  icon: Clock,
+                  desc: "Verification is done on the date of hackathon",
+                  status: registration?.paymentStatus === 'verified' ? 'completed' : (registration ? 'current' : 'pending')
+                },
+                {
+                  id: 4,
+                  label: "Ready!",
+                  icon: ShieldCheck,
+                  desc: "Hackathon enabled",
+                  status: registration?.paymentStatus === 'verified' ? 'completed' : 'pending'
+                }
+              ].map((step, i, arr) => (
+                <div key={step.id} className="relative group">
+                  <div className={`p-4 rounded-2xl border transition-all duration-300 ${step.status === 'completed' ? "bg-primary/10 border-primary/30" :
+                    step.status === 'current' ? "bg-secondary border-primary/50 shadow-[0_0_15px_rgba(var(--primary),0.1)]" :
+                      "bg-white/5 border-white/5 opacity-50"
+                    }`}>
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${step.status === 'completed' ? "bg-primary text-black" :
+                        step.status === 'current' ? "bg-primary/20 text-primary" :
+                          "bg-white/10 text-muted-foreground"
+                        }`}>
+                        {step.status === 'completed' ? <CheckCircle className="w-5 h-5" /> : <step.icon className="w-5 h-5" />}
+                      </div>
+                      <span className={`text-xs font-bold uppercase tracking-tight ${step.status === 'pending' ? 'text-muted-foreground' : 'text-white'}`}>
+                        {step.label}
+                      </span>
+                    </div>
+                    <p className={`text-[10px] leading-tight ${step.status === 'pending' ? 'text-muted-foreground' : 'text-gray-400'}`}>
+                      {step.desc}
+                    </p>
+                  </div>
+                  {i < arr.length - 1 && (
+                    <div className="hidden md:block absolute -right-2 top-1/2 -translate-y-1/2 z-10">
+                      <ChevronRight className={`w-4 h-4 ${step.status === 'completed' ? 'text-primary' : 'text-white/10'}`} />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Quick Action Link */}
+            {!registration && (
+              <div className="mt-6 flex items-center justify-between p-3 px-4 bg-primary/5 rounded-xl border border-primary/20">
+                <div className="flex items-center gap-3">
+                  <AlertCircle className="w-4 h-4 text-primary animate-pulse" />
+                  <p className="text-xs text-primary/80 font-medium">
+                    {!myTeam ? "Start by joining or creating a team to participate." :
+                      isLeader ? "Complete team registration to secure your spot!" :
+                        "Waiting for your team leader to complete registration."}
+                  </p>
+                </div>
+                {!myTeam ? (
+                  <Link to="/teams">
+                    <Button variant="link" size="sm" className="text-primary hover:text-white p-0 h-auto text-xs flex items-center gap-1">
+                      Go to Teams <ChevronRight className="w-3 h-3" />
+                    </Button>
+                  </Link>
+                ) : (isLeader && !registration) && (
+                  <Link to="/register">
+                    <Button variant="link" size="sm" className="text-primary hover:text-white p-0 h-auto text-xs flex items-center gap-1">
+                      Register Now <ChevronRight className="w-3 h-3" />
+                    </Button>
+                  </Link>
+                )}
+              </div>
+            )}
+          </div>
+        </motion.div>
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
             {/* Profile Card */}
@@ -116,7 +221,7 @@ export default function DashboardPage() {
                   </span>
                 )}
               </div>
-              
+
               {myTeam ? (
                 <div className="space-y-6">
                   <div className="p-4 bg-secondary/30 rounded-xl border border-white/5">
@@ -127,13 +232,13 @@ export default function DashboardPage() {
                   {isLeader && myTeam.teamCode && (
                     <div className="p-5 rounded-xl border border-primary/30 bg-primary/5 group relative overflow-hidden">
                       <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-20 transition-opacity">
-                         <QrCode className="w-12 h-12" />
+                        <QrCode className="w-12 h-12" />
                       </div>
                       <h3 className="text-xs font-semibold text-primary mb-1 uppercase tracking-wider">Invite Code</h3>
                       <div className="flex items-center gap-4">
                         <div className="text-3xl font-black tracking-widest text-white">{myTeam.teamCode}</div>
-                        <Button 
-                          variant="ghost" 
+                        <Button
+                          variant="ghost"
                           size="sm"
                           className="text-primary hover:bg-primary/10"
                           onClick={() => {
@@ -153,8 +258,8 @@ export default function DashboardPage() {
                       {myTeam.members?.map((m: any) => (
                         <div key={m.id} className="flex items-center justify-between bg-white/5 border border-white/5 rounded-xl px-4 py-3">
                           <div className="flex items-center gap-3">
-                             <div className={`w-2 h-2 rounded-full ${m.role === 'leader' ? 'bg-primary' : 'bg-muted-foreground'}`}></div>
-                             <span className="text-sm font-medium text-white">{m.name}</span>
+                            <div className={`w-2 h-2 rounded-full ${m.role === 'leader' ? 'bg-primary' : 'bg-muted-foreground'}`}></div>
+                            <span className="text-sm font-medium text-white">{m.name}</span>
                           </div>
                           <span className="text-[10px] text-muted-foreground uppercase">{m.role}</span>
                         </div>
@@ -181,7 +286,7 @@ export default function DashboardPage() {
                 <CheckCircle className={`h-5 w-5 ${registration ? "text-green-500" : "text-muted-foreground"}`} />
                 Registration
               </h2>
-              
+
               {registration ? (
                 <div className="space-y-6">
                   <div className="grid grid-cols-2 gap-4">
@@ -191,9 +296,8 @@ export default function DashboardPage() {
                     </div>
                     <div className="p-3 bg-white/5 rounded-lg border border-white/5">
                       <p className="text-[10px] text-muted-foreground uppercase">Status</p>
-                      <p className={`text-xs font-bold capitalize ${
-                        registration.paymentStatus === 'verified' ? "text-green-500" : "text-yellow-500 animate-pulse"
-                      }`}>
+                      <p className={`text-xs font-bold capitalize ${registration.paymentStatus === 'verified' ? "text-green-500" : "text-yellow-500 animate-pulse"
+                        }`}>
                         {registration.paymentStatus === 'verified' ? "Payment Verified" : "Pending Verification"}
                       </p>
                     </div>
@@ -202,12 +306,11 @@ export default function DashboardPage() {
                   {/* 3 QR Buttons */}
                   <div className="pt-4 border-t border-white/10 space-y-3">
                     <p className="text-xs text-muted-foreground uppercase text-center mb-2">QR Codes</p>
-                    
+
                     <button
                       onClick={() => setActiveQR(activeQR === "team" ? null : "team")}
-                      className={`w-full flex items-center gap-3 p-3 rounded-xl border transition-all ${
-                        activeQR === "team" ? "bg-primary/10 border-primary/30 text-primary" : "bg-white/5 border-white/10 text-white hover:bg-white/10"
-                      }`}
+                      className={`w-full flex items-center gap-3 p-3 rounded-xl border transition-all ${activeQR === "team" ? "bg-primary/10 border-primary/30 text-primary" : "bg-white/5 border-white/10 text-white hover:bg-white/10"
+                        }`}
                     >
                       <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${activeQR === "team" ? "bg-primary/20" : "bg-white/10"}`}>
                         <Users className="w-5 h-5" />
@@ -220,9 +323,8 @@ export default function DashboardPage() {
 
                     <button
                       onClick={() => setActiveQR(activeQR === "food" ? null : "food")}
-                      className={`w-full flex items-center gap-3 p-3 rounded-xl border transition-all ${
-                        activeQR === "food" ? "bg-green-500/10 border-green-500/30 text-green-400" : "bg-white/5 border-white/10 text-white hover:bg-white/10"
-                      }`}
+                      className={`w-full flex items-center gap-3 p-3 rounded-xl border transition-all ${activeQR === "food" ? "bg-green-500/10 border-green-500/30 text-green-400" : "bg-white/5 border-white/10 text-white hover:bg-white/10"
+                        }`}
                     >
                       <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${activeQR === "food" ? "bg-green-500/20" : "bg-white/10"}`}>
                         <Utensils className="w-5 h-5" />
@@ -254,29 +356,28 @@ export default function DashboardPage() {
                               <X className="w-4 h-4" />
                             </button>
                           </div>
-                          <div 
+                          <div
                             className="bg-white p-4 rounded-2xl inline-block shadow-2xl shadow-primary/20 relative"
                             style={{ colorScheme: "light" }}
                           >
-                             <QRCodeSVG 
-                               value={
-                                 activeQR === "team" ? teamScanLink :
-                                 foodScanLink
-                               }
-                               size={160} 
-                               level="H" 
-                               includeMargin 
-                               fgColor="#000000" 
-                               bgColor="#FFFFFF"
-                             />
-                             <div className="absolute inset-x-0 bottom-[-10px] flex justify-center">
-                                <span className={`text-background text-[10px] font-black px-3 py-1 rounded-full uppercase ${
-                                  activeQR === "team" ? "bg-primary" :
-                                  "bg-green-500"
+                            <QRCodeSVG
+                              value={
+                                activeQR === "team" ? teamScanLink :
+                                  foodScanLink
+                              }
+                              size={160}
+                              level="H"
+                              includeMargin
+                              fgColor="#000000"
+                              bgColor="#FFFFFF"
+                            />
+                            <div className="absolute inset-x-0 bottom-[-10px] flex justify-center">
+                              <span className={`text-background text-[10px] font-black px-3 py-1 rounded-full uppercase ${activeQR === "team" ? "bg-primary" :
+                                "bg-green-500"
                                 }`}>
-                                  {activeQR === "team" ? "Team" : "Food"}
-                                </span>
-                             </div>
+                                {activeQR === "team" ? "Team" : "Food"}
+                              </span>
+                            </div>
                           </div>
                           <p className="text-[11px] text-muted-foreground pt-2">
                             {activeQR === "team" && "Show this to admin for team verification & kits."}
@@ -334,26 +435,26 @@ export default function DashboardPage() {
 
                 {myTeam?.problemStatement ? (
                   <div className="text-center space-y-4">
-                     <div className="text-6xl font-black text-white glow-text animate-bounce-subtle">
-                        #{myTeam.problemStatement}
-                     </div>
-                     <p className="text-sm text-muted-foreground">This is your assigned problem statement number for the hackathon.</p>
+                    <div className="text-6xl font-black text-white glow-text animate-bounce-subtle">
+                      #{myTeam.problemStatement}
+                    </div>
+                    <p className="text-sm text-muted-foreground">This is your assigned problem statement number for the hackathon.</p>
                   </div>
                 ) : isLeader ? (
                   <div className="text-center space-y-6">
-                     <div className={`text-6xl font-black text-white/20 transition-all ${isRolling ? 'animate-pulse scale-110 text-primary' : ''}`}>
-                        {String(displayDice).padStart(2, '0')}
-                     </div>
-                     <Button 
-                       variant="neon" 
-                       className="w-full h-14 text-lg group" 
-                       onClick={handleRollDice}
-                       disabled={isRolling}
-                     >
-                       <Dice5 className={`mr-2 h-6 w-6 ${isRolling ? 'animate-spin' : 'group-hover:rotate-45 transition-transform'}`} />
-                       {isRolling ? "Rolling..." : "Roll the Dice!"}
-                     </Button>
-                     <p className="text-[10px] text-muted-foreground">You can only roll once. The result will be final.</p>
+                    <div className={`text-6xl font-black text-white/20 transition-all ${isRolling ? 'animate-pulse scale-110 text-primary' : ''}`}>
+                      {String(displayDice).padStart(2, '0')}
+                    </div>
+                    <Button
+                      variant="neon"
+                      className="w-full h-14 text-lg group"
+                      onClick={handleRollDice}
+                      disabled={isRolling}
+                    >
+                      <Dice5 className={`mr-2 h-6 w-6 ${isRolling ? 'animate-spin' : 'group-hover:rotate-45 transition-transform'}`} />
+                      {isRolling ? "Rolling..." : "Roll the Dice!"}
+                    </Button>
+                    <p className="text-[10px] text-muted-foreground">You can only roll once. The result will be final.</p>
                   </div>
                 ) : (
                   <div className="text-center py-4">
