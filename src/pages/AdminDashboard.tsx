@@ -13,6 +13,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
+import {
   Table,
   TableBody,
   TableCaption,
@@ -164,197 +170,351 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          <div className="flex items-center justify-between px-1">
-             <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest">
-                Showing {filteredTeams.length} {filteredTeams.length === 1 ? 'Team' : 'Teams'}
-             </p>
-             {(searchQuery || paymentFilter !== "all" || kitFilter !== "all") && (
-               <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={() => {
-                  setSearchQuery("");
-                  setPaymentFilter("all");
-                  setKitFilter("all");
-                }}
-                className="h-7 text-[10px] text-primary hover:text-primary hover:bg-primary/10"
-               >
-                 Clear Filters
-               </Button>
-             )}
-          </div>
+          <Tabs defaultValue="overview" className="w-full">
+            <div className="flex items-center justify-between mb-6">
+              <TabsList className="bg-white/5 border border-white/10 p-1 h-12 rounded-xl">
+                <TabsTrigger value="overview" className="gap-2 rounded-lg px-4 data-[state=active]:bg-primary/20 data-[state=active]:text-primary transition-all">
+                  <Users className="h-4 w-4" /> Basic Details
+                </TabsTrigger>
+                <TabsTrigger value="logistics" className="gap-2 rounded-lg px-4 data-[state=active]:bg-primary/20 data-[state=active]:text-primary transition-all">
+                  <Package className="h-4 w-4" /> Logistics
+                </TabsTrigger>
+                <TabsTrigger value="full" className="gap-2 rounded-lg px-4 data-[state=active]:bg-primary/20 data-[state=active]:text-primary transition-all">
+                  <ShieldCheck className="h-4 w-4" /> Full View
+                </TabsTrigger>
+              </TabsList>
 
-          <div className="glass-card rounded-xl overflow-hidden border border-border/50">
-            <Table>
-              <TableCaption>A list of all teams in the hackathon.</TableCaption>
-              <TableHeader className="bg-muted/50">
-                <TableRow>
-                  <TableHead className="w-[200px]">Team Name</TableHead>
-                   <TableHead>Leader</TableHead>
-                   <TableHead>College</TableHead>
-                   <TableHead>Phone</TableHead>
-                  <TableHead>Members</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Domain</TableHead>
-                  <TableHead>Problem</TableHead>
-                  <TableHead>Food Scans</TableHead>
-                  <TableHead>Kit Received</TableHead>
-                  <TableHead className="text-right">Payment</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredTeams.map((team: any) => (
-                  <TableRow key={team.id} className="hover:bg-muted/30 transition-colors">
-                  <TableCell className="font-medium">
-                    <div className="flex flex-col">
-                      <span>{team.teamName}</span>
-                      <span className="text-[10px] text-muted-foreground uppercase mt-1">ID: {team.id.substring(0,8)}...</span>
-                    </div>
-                  </TableCell>
-                   <TableCell>
-                     <div className="flex flex-col gap-1">
-                       <div className="flex items-center gap-2 text-sm">
-                         <Users className="h-3 w-3 text-muted-foreground" />
-                         {team.leader.name}
-                       </div>
-                       <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                         <Mail className="h-3 w-3" />
-                         {team.leader.email}
-                       </div>
-                     </div>
-                   </TableCell>
-                   <TableCell>
-                     <div className="flex items-center gap-2 text-sm">
-                       <School className="h-3 w-3 text-muted-foreground" />
-                       <span className="truncate max-w-[150px]" title={team.leader.college}>
-                         {team.leader.college}
-                       </span>
-                     </div>
-                   </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2 text-sm">
-                      <Phone className="h-3 w-3 text-muted-foreground" />
-                      {team.leader.phone}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant="outline" className="font-normal text-[10px]">
-                      {team.members.length} / {team.maxSize}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    {team.registration ? (
-                      <Badge variant="default" className="bg-green-500/10 text-green-500 border-green-500/20 gap-1 capitalize text-[10px]">
-                        <CheckCircle2 className="h-3 w-3" />
-                        {team.registration.status}
-                      </Badge>
-                    ) : (
-                      <Badge variant="outline" className="text-muted-foreground gap-1 text-[10px]">
-                        <Clock className="h-3 w-3" />
-                        Not Reg.
-                      </Badge>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {team.registration?.domain === 'AI/ML' ? (
-                      <Badge variant="secondary" className="bg-blue-500/10 text-blue-400 border-blue-500/20 text-[10px]">AI/ML</Badge>
-                    ) : team.registration?.domain ? (
-                      <Badge variant="secondary" className="bg-purple-500/10 text-purple-400 border-purple-500/20 text-[10px]">Fullstack</Badge>
-                    ) : (
-                      <span className="text-muted-foreground text-xs">—</span>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {team.problemStatement ? (
-                      <div className="flex items-center gap-2">
-                         <span className="text-white font-bold bg-primary/20 px-2 py-0.5 rounded border border-primary/30 text-xs">#{team.problemStatement}</span>
-                      </div>
-                    ) : (
-                      <span className="text-muted-foreground text-xs">Not Rolled</span>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex flex-col gap-1.5">
-                      {team.members.map((m: any) => (
-                        <div key={m.id} className="flex flex-col gap-0.5 border-b border-white/5 pb-1 last:border-0">
-                          <div className="flex items-center justify-between gap-2 text-[10px]">
-                            <span className="truncate max-w-[80px] font-medium text-white">{m.name.split(' ')[0]}</span>
-                            <span className={`font-bold px-1.5 py-0.5 rounded ${m.mealsTaken?.length >= 4 ? 'bg-destructive/20 text-destructive' : m.mealsTaken?.length > 0 ? 'bg-primary/20 text-primary' : 'bg-muted text-muted-foreground'}`}>
-                              {m.mealsTaken?.length || 0}/4
-                            </span>
+              <div className="flex items-center gap-4">
+                 <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest">
+                    Showing {filteredTeams.length} {filteredTeams.length === 1 ? 'Team' : 'Teams'}
+                 </p>
+                 {(searchQuery || paymentFilter !== "all" || kitFilter !== "all") && (
+                   <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => {
+                      setSearchQuery("");
+                      setPaymentFilter("all");
+                      setKitFilter("all");
+                    }}
+                    className="h-7 text-[10px] text-primary hover:text-primary hover:bg-primary/10"
+                   >
+                     Clear Filters
+                   </Button>
+                 )}
+              </div>
+            </div>
+
+            {/* TAB 1: BASIC DETAILS */}
+            <TabsContent value="overview">
+              <div className="glass-card rounded-xl overflow-hidden border border-border/50">
+                <Table>
+                  <TableCaption>Essential team information for quick verification.</TableCaption>
+                  <TableHeader className="bg-muted/50">
+                    <TableRow>
+                      <TableHead className="w-[200px]">Team Name</TableHead>
+                      <TableHead>Leader</TableHead>
+                      <TableHead>College</TableHead>
+                      <TableHead>Phone</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Payment</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredTeams.map((team: any) => (
+                      <TableRow key={team.id} className="hover:bg-muted/30 transition-colors">
+                        <TableCell className="font-medium">
+                          <div className="flex flex-col">
+                            <span>{team.teamName}</span>
+                            <span className="text-[10px] text-muted-foreground uppercase mt-1">ID: {team.id.substring(0,8)}...</span>
                           </div>
-                          {m.mealsTaken?.length > 0 && (
-                            <div className="flex flex-wrap gap-1 mt-0.5">
-                               {m.mealsTaken.map((mt: string) => (
-                                 <span key={mt} className="text-[8px] bg-white/10 px-1 rounded text-gray-400 capitalize">{mt[0]}</span>
-                               ))}
-                            </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2 text-sm font-medium">
+                            <Users className="h-3 w-3 text-muted-foreground" />
+                            {team.leader.name}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                           <div className="flex items-center gap-2 text-sm">
+                             <School className="h-3 w-3 text-muted-foreground" />
+                             <span className="truncate max-w-[150px]">{team.leader.college}</span>
+                           </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2 text-sm">
+                            <Phone className="h-3 w-3 text-muted-foreground" />
+                            {team.leader.phone}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          {team.registration ? (
+                            <Badge variant="default" className="bg-green-500/10 text-green-500 border-green-500/20 gap-1 capitalize text-[10px]">
+                              <CheckCircle2 className="h-3 w-3" />
+                              {team.registration.status}
+                            </Badge>
+                          ) : (
+                            <Badge variant="outline" className="text-muted-foreground gap-1 text-[10px]">
+                              <Clock className="h-3 w-3" />
+                              Not Reg.
+                            </Badge>
                           )}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {team.registration ? (
+                            <div className="flex flex-col items-end gap-1">
+                              <Badge className={`text-[10px] gap-1 capitalize ${team.registration.paymentStatus === 'verified' ? 'bg-green-500/10 text-green-500' : team.registration.paymentStatus === 'pending' ? 'bg-yellow-500/10 text-yellow-500' : 'bg-destructive/10 text-destructive'}`}>
+                                {team.registration.paymentStatus}
+                              </Badge>
+                              {team.registration.paymentStatus === 'pending' && (
+                                <Button variant="outline" size="sm" className="h-6 text-[10px] px-2 w-full max-w-[80px]" onClick={() => verifyMutation.mutate(team.registration.id)} disabled={verifyMutation.isPending}>
+                                  Verify
+                                </Button>
+                              )}
+                            </div>
+                          ) : (
+                            <span className="text-muted-foreground text-sm">—</span>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </TabsContent>
+
+            {/* TAB 2: LOGISTICS */}
+            <TabsContent value="logistics">
+              <div className="glass-card rounded-xl overflow-hidden border border-border/50">
+                <Table>
+                  <TableCaption>Manage food distribution and event kits.</TableCaption>
+                  <TableHeader className="bg-muted/50">
+                    <TableRow>
+                      <TableHead className="w-[200px]">Team Name</TableHead>
+                      <TableHead>Leader</TableHead>
+                      <TableHead>Members</TableHead>
+                      <TableHead>Food Scans</TableHead>
+                      <TableHead>Kit Received</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredTeams.map((team: any) => (
+                      <TableRow key={team.id} className="hover:bg-muted/30 transition-colors">
+                        <TableCell className="font-medium">
+                          <span>{team.teamName}</span>
+                        </TableCell>
+                        <TableCell>
+                          <span className="text-sm">{team.leader.name}</span>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="outline" className="font-normal text-[10px]">
+                            {team.members.length} / {team.maxSize}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex flex-col gap-1.5">
+                            {team.members.map((m: any) => (
+                              <div key={m.id} className="flex flex-col gap-0.5 border-b border-white/5 pb-1 last:border-0">
+                                <div className="flex items-center justify-between gap-4 text-[10px]">
+                                  <span className="truncate max-w-[100px] font-medium text-white">{m.name}</span>
+                                  <span className={`font-bold px-1.5 py-0.5 rounded ${m.mealsTaken?.length >= 4 ? 'bg-destructive/20 text-destructive' : m.mealsTaken?.length > 0 ? 'bg-primary/20 text-primary' : 'bg-muted text-muted-foreground'}`}>
+                                    {m.mealsTaken?.length || 0}/4
+                                  </span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex flex-col gap-1.5">
+                            {team.members.map((m: any) => (
+                              <div key={m.id} className="flex items-center justify-between gap-4 text-[10px]">
+                                <span className="truncate max-w-[100px]">{m.name}</span>
+                                <button
+                                  onClick={() => kitMutation.mutate(m.id)}
+                                  disabled={kitMutation.isPending}
+                                  className={`flex items-center gap-1 px-1.5 py-0.5 rounded border transition-colors ${m.kitReceived === true ? 'bg-green-500/20 border-green-500/40 text-green-400' : 'bg-muted border-border text-muted-foreground'}`}
+                                >
+                                  <Package className="h-2.5 w-2.5" />
+                                  {m.kitReceived === true ? 'Yes' : 'No'}
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </TabsContent>
+
+            {/* TAB 3: FULL VIEW */}
+            <TabsContent value="full">
+              <div className="glass-card rounded-xl overflow-hidden border border-border/50">
+                <Table>
+                  <TableCaption>Comprehensive list of all team data.</TableCaption>
+                  <TableHeader className="bg-muted/50">
+                    <TableRow>
+                      <TableHead className="w-[200px]">Team Name</TableHead>
+                      <TableHead>Leader</TableHead>
+                      <TableHead>College</TableHead>
+                      <TableHead>Phone</TableHead>
+                      <TableHead>Members</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Domain</TableHead>
+                      <TableHead>Problem</TableHead>
+                      <TableHead>Food Scans</TableHead>
+                      <TableHead>Kit Received</TableHead>
+                      <TableHead className="text-right">Payment</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredTeams.map((team: any) => (
+                      <TableRow key={team.id} className="hover:bg-muted/30 transition-colors">
+                      <TableCell className="font-medium">
+                        <div className="flex flex-col">
+                          <span>{team.teamName}</span>
+                          <span className="text-[10px] text-muted-foreground uppercase mt-1">ID: {team.id.substring(0,8)}...</span>
                         </div>
-                      ))}
-                    </div>
-                  </TableCell>
-                  {/* KIT RECEIVED COLUMN */}
-                  <TableCell>
-                    <div className="flex flex-col gap-1.5">
-                      {team.members.map((m: any) => (
-                        <div key={m.id} className="flex items-center justify-between gap-2 text-[10px]">
-                          <span className="truncate max-w-[60px]">{m.name.split(' ')[0]}</span>
-                          <button
-                            onClick={() => kitMutation.mutate(m.id)}
-                            disabled={kitMutation.isPending}
-                            title={m.kitReceived === true ? 'Mark as NOT received' : 'Mark as received'}
-                            className={`flex items-center gap-1 px-1.5 py-0.5 rounded border transition-colors ${
-                              m.kitReceived === true
-                                ? 'bg-green-500/20 border-green-500/40 text-green-400 hover:bg-red-500/20 hover:border-red-500/40 hover:text-red-400'
-                                : 'bg-muted border-border text-muted-foreground hover:bg-green-500/20 hover:border-green-500/40 hover:text-green-400'
-                            }`}
-                          >
-                            <Package className="h-2.5 w-2.5" />
-                            {m.kitReceived === true ? 'Yes' : 'No'}
-                          </button>
+                      </TableCell>
+                       <TableCell>
+                         <div className="flex flex-col gap-1">
+                           <div className="flex items-center gap-2 text-sm">
+                             <Users className="h-3 w-3 text-muted-foreground" />
+                             {team.leader.name}
+                           </div>
+                           <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                             <Mail className="h-3 w-3" />
+                             {team.leader.email}
+                           </div>
+                         </div>
+                       </TableCell>
+                       <TableCell>
+                         <div className="flex items-center gap-2 text-sm">
+                           <School className="h-3 w-3 text-muted-foreground" />
+                           <span className="truncate max-w-[150px]" title={team.leader.college}>
+                             {team.leader.college}
+                           </span>
+                         </div>
+                       </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2 text-sm">
+                          <Phone className="h-3 w-3 text-muted-foreground" />
+                          {team.leader.phone}
                         </div>
-                      ))}
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    {team.registration ? (
-                      <div className="flex flex-col items-end gap-1">
-                        <Badge 
-                          className={`text-[10px] gap-1 capitalize ${
-                            team.registration.paymentStatus === 'verified' 
-                              ? 'bg-green-500/10 text-green-500' 
-                              : team.registration.paymentStatus === 'pending'
-                              ? 'bg-yellow-500/10 text-yellow-500'
-                              : 'bg-destructive/10 text-destructive'
-                          }`}
-                        >
-                          {team.registration.paymentStatus}
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className="font-normal text-[10px]">
+                          {team.members.length} / {team.maxSize}
                         </Badge>
-                        {team.registration.paymentStatus === 'pending' && (
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
-                            className="h-6 text-[10px] px-2 w-full max-w-[80px]"
-                            onClick={() => verifyMutation.mutate(team.registration.id)}
-                            disabled={verifyMutation.isPending}
-                          >
-                            Verify
-                          </Button>
+                      </TableCell>
+                      <TableCell>
+                        {team.registration ? (
+                          <Badge variant="default" className="bg-green-500/10 text-green-500 border-green-500/20 gap-1 capitalize text-[10px]">
+                            <CheckCircle2 className="h-3 w-3" />
+                            {team.registration.status}
+                          </Badge>
+                        ) : (
+                          <Badge variant="outline" className="text-muted-foreground gap-1 text-[10px]">
+                            <Clock className="h-3 w-3" />
+                            Not Reg.
+                          </Badge>
                         )}
-                        {team.registration.utrNumber && (
-                          <span className="text-[9px] text-muted-foreground">UTR: {team.registration.utrNumber}</span>
+                      </TableCell>
+                      <TableCell>
+                        {team.registration?.domain === 'AI/ML' ? (
+                          <Badge variant="secondary" className="bg-blue-500/10 text-blue-400 border-blue-500/20 text-[10px]">AI/ML</Badge>
+                        ) : team.registration?.domain ? (
+                          <Badge variant="secondary" className="bg-purple-500/10 text-purple-400 border-purple-500/20 text-[10px]">Fullstack</Badge>
+                        ) : (
+                          <span className="text-muted-foreground text-xs">—</span>
                         )}
-                      </div>
-                    ) : (
-                      <span className="text-muted-foreground text-sm">—</span>
-                    )}
-                  </TableCell>
-                </TableRow>
-              ))}
-              </TableBody>
-            </Table>
-          </div>
+                      </TableCell>
+                      <TableCell>
+                        {team.problemStatement ? (
+                          <div className="flex items-center gap-2">
+                             <span className="text-white font-bold bg-primary/20 px-2 py-0.5 rounded border border-primary/30 text-xs">#{team.problemStatement}</span>
+                          </div>
+                        ) : (
+                          <span className="text-muted-foreground text-xs">Not Rolled</span>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex flex-col gap-1.5">
+                          {team.members.map((m: any) => (
+                            <div key={m.id} className="flex flex-col gap-0.5 border-b border-white/5 pb-1 last:border-0">
+                              <div className="flex items-center justify-between gap-2 text-[10px]">
+                                <span className="truncate max-w-[80px] font-medium text-white">{m.name.split(' ')[0]}</span>
+                                <span className={`font-bold px-1.5 py-0.5 rounded ${m.mealsTaken?.length >= 4 ? 'bg-destructive/20 text-destructive' : m.mealsTaken?.length > 0 ? 'bg-primary/20 text-primary' : 'bg-muted text-muted-foreground'}`}>
+                                  {m.mealsTaken?.length || 0}/4
+                                </span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex flex-col gap-1.5">
+                          {team.members.map((m: any) => (
+                            <div key={m.id} className="flex items-center justify-between gap-2 text-[10px]">
+                              <span className="truncate max-w-[60px]">{m.name.split(' ')[0]}</span>
+                              <button
+                                onClick={() => kitMutation.mutate(m.id)}
+                                disabled={kitMutation.isPending}
+                                className={`flex items-center gap-1 px-1.5 py-0.5 rounded border transition-colors ${
+                                  m.kitReceived === true
+                                    ? 'bg-green-500/20 border-green-500/40 text-green-400'
+                                    : 'bg-muted border-border text-muted-foreground'
+                                }`}
+                              >
+                                <Package className="h-2.5 w-2.5" />
+                                {m.kitReceived === true ? 'Yes' : 'No'}
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {team.registration ? (
+                          <div className="flex flex-col items-end gap-1">
+                            <Badge 
+                              className={`text-[10px] gap-1 capitalize ${
+                                team.registration.paymentStatus === 'verified' 
+                                  ? 'bg-green-500/10 text-green-500' 
+                                  : team.registration.paymentStatus === 'pending'
+                                  ? 'bg-yellow-500/10 text-yellow-500'
+                                  : 'bg-destructive/10 text-destructive'
+                              }`}
+                            >
+                              {team.registration.paymentStatus}
+                            </Badge>
+                            {team.registration.paymentStatus === 'pending' && (
+                              <Button 
+                                variant="outline" 
+                                size="sm" 
+                                className="h-6 text-[10px] px-2 w-full max-w-[80px]"
+                                onClick={() => verifyMutation.mutate(team.registration.id)}
+                                disabled={verifyMutation.isPending}
+                              >
+                                Verify
+                              </Button>
+                            )}
+                            {team.registration.utrNumber && (
+                              <span className="text-[9px] text-muted-foreground">UTR: {team.registration.utrNumber}</span>
+                            )}
+                          </div>
+                        ) : (
+                          <span className="text-muted-foreground text-sm">—</span>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </TabsContent>
+          </Tabs>
 
           {filteredTeams.length === 0 && (
             <div className="text-center py-24 glass-card rounded-xl border border-dashed border-white/10">
