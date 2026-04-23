@@ -65,8 +65,12 @@ export default function AdminDashboard() {
     if (!teams) return [];
     
     return teams.filter((team: any) => {
-      // Search by team name
-      const matchesSearch = team.teamName.toLowerCase().includes(searchQuery.toLowerCase());
+      // Search by team name, leader name, or UTR number
+      const query = searchQuery.toLowerCase();
+      const matchesSearch = 
+        team.teamName.toLowerCase().includes(query) ||
+        team.leader.name.toLowerCase().includes(query) ||
+        (team.registration?.utrNumber && team.registration.utrNumber.toLowerCase().includes(query));
       
       // Payment Filter
       const status = team.registration?.paymentStatus || 'pending';
@@ -109,7 +113,7 @@ export default function AdminDashboard() {
             <div className="md:col-span-2 relative group">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
               <Input
-                placeholder="Search team name..."
+                placeholder="Search team, leader or UTR..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10 h-11 bg-white/5 border-white/10 focus:border-primary/50 transition-all rounded-xl"
