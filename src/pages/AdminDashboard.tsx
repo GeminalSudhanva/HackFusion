@@ -3,7 +3,7 @@ import { API } from "@/lib/api";
 import { useAuth } from "@/lib/auth-context";
 import { Navigate } from "react-router-dom";
 import { useState, useMemo } from "react";
-import { Users, ShieldCheck, Mail, CheckCircle2, Clock, Package, Search, Filter, X } from "lucide-react";
+import { Users, ShieldCheck, Mail, Phone, CheckCircle2, Clock, Package, Search, Filter, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -186,6 +186,7 @@ export default function AdminDashboard() {
                 <TableRow>
                   <TableHead className="w-[200px]">Team Name</TableHead>
                   <TableHead>Leader</TableHead>
+                  <TableHead>Phone</TableHead>
                   <TableHead>Members</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Domain</TableHead>
@@ -214,6 +215,12 @@ export default function AdminDashboard() {
                         <Mail className="h-3 w-3" />
                         {team.leader.email}
                       </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2 text-sm">
+                      <Phone className="h-3 w-3 text-muted-foreground" />
+                      {team.leader.phone}
                     </div>
                   </TableCell>
                   <TableCell>

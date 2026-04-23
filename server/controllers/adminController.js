@@ -11,7 +11,7 @@ const getAllTeamsWithRegistrations = async (req, res) => {
           select: { name: true, email: true, phone: true }
         },
         members: {
-          select: { id: true, name: true, email: true, role: true, mealsTaken: true, kitReceived: true }
+          select: { id: true, name: true, email: true, phone: true, role: true, mealsTaken: true, kitReceived: true }
         },
         registration: true
       },
