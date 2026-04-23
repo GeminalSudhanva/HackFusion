@@ -5,11 +5,21 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth-context";
 import { API } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
-import { Users, Shield, CheckCircle, AlertCircle, UserPlus, Dice5, QrCode, Utensils, MessageCircle, Package, X, ClipboardCheck, Clock, ShieldCheck, ChevronRight } from "lucide-react";
+import { Users, Shield, CheckCircle, AlertCircle, UserPlus, Dice5, QrCode, Utensils, MessageCircle, Package, X, ClipboardCheck, Clock, ShieldCheck, ChevronRight, Plus, Hash } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { QRCodeSVG } from "qrcode.react";
 
 export default function DashboardPage() {
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, updateUserContext } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -19,6 +29,12 @@ export default function DashboardPage() {
   const [isRolling, setIsRolling] = useState(false);
   const [displayDice, setDisplayDice] = useState(1);
   const [activeQR, setActiveQR] = useState<"team" | "kit" | "food" | null>(null);
+  const [teamName, setTeamName] = useState("");
+  const [joinCode, setJoinCode] = useState("");
+  const [creating, setCreating] = useState(false);
+  const [joining, setJoining] = useState(false);
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [isJoinDialogOpen, setIsJoinDialogOpen] = useState(false);
 
   useEffect(() => {
     if (authLoading) return;
@@ -64,6 +80,40 @@ export default function DashboardPage() {
       clearInterval(interval);
       setIsRolling(false);
       toast({ title: "Roll Failed", description: error.message, variant: "destructive" });
+    }
+  };
+
+  const handleCreateTeam = async () => {
+    if (!user || !teamName.trim()) return;
+    setCreating(true);
+    try {
+      const response = await API.createTeam({ teamName: teamName.trim() });
+      toast({ title: "Team created successfully!" });
+      updateUserContext({ teamId: response.id, role: 'leader' });
+      setIsCreateDialogOpen(false);
+      setTeamName("");
+      await loadData();
+    } catch (error: any) {
+      toast({ title: "Failed to create team", description: error.message, variant: "destructive" });
+    } finally {
+      setCreating(false);
+    }
+  };
+
+  const handleJoinTeam = async () => {
+    if (!user || !joinCode.trim()) return;
+    setJoining(true);
+    try {
+      const response = await API.joinTeamViaCode({ teamCode: joinCode.trim() });
+      toast({ title: "Joined team!" });
+      updateUserContext({ teamId: response.team.id, role: 'member' });
+      setIsJoinDialogOpen(false);
+      setJoinCode("");
+      await loadData();
+    } catch (error: any) {
+      toast({ title: "Failed to join", description: error.message, variant: "destructive" });
+    } finally {
+      setJoining(false);
     }
   };
 
@@ -165,31 +215,103 @@ export default function DashboardPage() {
               ))}
             </div>
 
-            {/* Quick Action Link */}
+            {/* Quick Action Buttons */}
             {!registration && (
-              <div className="mt-6 space-y-3">
-                <div className="flex items-center justify-between p-3 px-4 bg-primary/5 rounded-xl border border-primary/20">
-                  <div className="flex items-center gap-3">
-                    <AlertCircle className="w-4 h-4 text-primary animate-pulse" />
-                    <p className="text-xs text-primary/80 font-medium">
-                      {!myTeam ? "Start by joining or creating a team to participate." :
-                        isLeader ? "Complete team registration to secure your spot!" :
-                          "Waiting for your team leader to complete registration."}
-                    </p>
+              <div className="mt-6 space-y-4">
+                {!myTeam ? (
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    {/* Create Team Dialog */}
+                    <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button variant="neon" className="flex-1 py-6 rounded-xl border border-primary/20 shadow-lg shadow-primary/10 group">
+                          <Plus className="w-5 h-5 mr-2 group-hover:rotate-90 transition-transform" /> 
+                          Create Team
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="glass-card border-white/10 backdrop-blur-xl">
+                        <DialogHeader>
+                          <DialogTitle className="text-xl font-display font-bold">Create a New Team</DialogTitle>
+                          <DialogDescription className="text-muted-foreground text-xs">
+                            As the creator, you will be the Team Leader.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4 py-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="teamName">Team Name</Label>
+                            <Input 
+                              id="teamName" 
+                              value={teamName} 
+                              onChange={(e) => setTeamName(e.target.value)} 
+                              placeholder="Enter a cool team name" 
+                              className="bg-white/5 border-white/10"
+                            />
+                          </div>
+                          <Button 
+                            variant="neon" 
+                            className="w-full" 
+                            onClick={handleCreateTeam} 
+                            disabled={creating || !teamName.trim()}
+                          >
+                            {creating ? "Creating..." : "Create Team"}
+                          </Button>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+
+                    {/* Join Team Dialog */}
+                    <Dialog open={isJoinDialogOpen} onOpenChange={setIsJoinDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" className="flex-1 py-6 rounded-xl border-white/10 hover:bg-white/5 group">
+                          <Hash className="w-5 h-5 mr-2 text-primary group-hover:scale-110 transition-transform" />
+                          Join with Code
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="glass-card border-white/10 backdrop-blur-xl">
+                        <DialogHeader>
+                          <DialogTitle className="text-xl font-display font-bold">Join an Existing Team</DialogTitle>
+                          <DialogDescription className="text-muted-foreground text-xs">
+                            Enter the unique team code shared by your leader.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4 py-4">
+                          <div className="space-y-2">
+                            <Label htmlFor="joinCode">Team Code</Label>
+                            <Input 
+                              id="joinCode" 
+                              value={joinCode} 
+                              onChange={(e) => setJoinCode(e.target.value)} 
+                              placeholder="e.g. HF-123456" 
+                              className="bg-white/5 border-white/10 uppercase tracking-widest"
+                            />
+                          </div>
+                          <Button 
+                            variant="neon" 
+                            className="w-full" 
+                            onClick={handleJoinTeam} 
+                            disabled={joining || !joinCode.trim()}
+                          >
+                            {joining ? "Joining..." : "Join Team"}
+                          </Button>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
                   </div>
-                  {!myTeam ? (
-                    <Link to="/teams">
-                      <Button variant="link" size="sm" className="text-primary hover:text-white p-0 h-auto text-xs flex items-center gap-1">
-                        Go to Teams <ChevronRight className="w-3 h-3" />
-                      </Button>
-                    </Link>
-                  ) : (isLeader && !registration) && (
-                    <Link to="/register">
-                      <Button variant="link" size="sm" className="text-primary hover:text-white p-0 h-auto text-xs flex items-center gap-1">
-                        Register Now <ChevronRight className="w-3 h-3" />
-                      </Button>
-                    </Link>
-                  )}
+                ) : (isLeader && !registration) && (
+                  <Link to="/register">
+                    <Button variant="neon" className="w-full py-6 rounded-xl shadow-lg shadow-primary/20">
+                      <ClipboardCheck className="w-5 h-5 mr-2" /> Complete Registration Now
+                    </Button>
+                  </Link>
+                )}
+
+                {/* Status Message */}
+                <div className="flex items-center gap-3 p-3 px-4 bg-primary/5 rounded-xl border border-primary/20">
+                  <AlertCircle className="w-4 h-4 text-primary animate-pulse" />
+                  <p className="text-[11px] text-primary/80 font-medium leading-tight">
+                    {!myTeam ? "Start by joining or creating a team to participate in the hackathon." :
+                      isLeader ? "Awesome! Now complete the registration to lock in your spot." :
+                        "Team joined! Waiting for your team leader to complete the registration."}
+                  </p>
                 </div>
 
                 {!myTeam && (
@@ -200,9 +322,8 @@ export default function DashboardPage() {
                   >
                     <AlertCircle className="w-4 h-4 text-yellow-500 shrink-0 mt-0.5" />
                     <div className="text-[10px] text-yellow-200/70 leading-relaxed">
-                      <strong className="text-yellow-500 block mb-0.5">Avoid Duplicate Teams!</strong>
-                      Only one person (the Leader) should "Create" a team. All other members must "Join" using the team code. 
-                      Creating multiple teams for the same group of people will lead to registration issues.
+                      <strong className="text-yellow-500 block mb-0.5">Pro Tip: Avoid Duplicate Teams!</strong>
+                      Only one person (the Leader) should <strong>"Create"</strong> a team. All other members must <strong>"Join"</strong> using the code. 
                     </div>
                   </motion.div>
                 )}
