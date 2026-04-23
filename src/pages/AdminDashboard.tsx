@@ -242,10 +242,14 @@ export default function AdminDashboard() {
                            </div>
                         </TableCell>
                         <TableCell>
-                          <div className="flex items-center gap-2 text-sm">
-                            <Phone className="h-3 w-3 text-muted-foreground" />
+                          <a 
+                            href={`tel:${team.leader.phone}`}
+                            className="flex items-center gap-2 text-sm hover:text-primary transition-colors group"
+                            title={`Call ${team.leader.name}`}
+                          >
+                            <Phone className="h-3 w-3 text-muted-foreground group-hover:text-primary transition-colors" />
                             {team.leader.phone}
-                          </div>
+                          </a>
                         </TableCell>
                         <TableCell>
                           {team.registration ? (
@@ -402,10 +406,14 @@ export default function AdminDashboard() {
                          </div>
                        </TableCell>
                       <TableCell>
-                        <div className="flex items-center gap-2 text-sm">
-                          <Phone className="h-3 w-3 text-muted-foreground" />
+                        <a 
+                          href={`tel:${team.leader.phone}`}
+                          className="flex items-center gap-2 text-sm hover:text-primary transition-colors group"
+                          title={`Call ${team.leader.name}`}
+                        >
+                          <Phone className="h-3 w-3 text-muted-foreground group-hover:text-primary transition-colors" />
                           {team.leader.phone}
-                        </div>
+                        </a>
                       </TableCell>
                       <TableCell>
                         <Badge variant="outline" className="font-normal text-[10px]">
