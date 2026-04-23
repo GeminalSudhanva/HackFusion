@@ -271,6 +271,9 @@ export default function AdminDashboard() {
                                   Verify
                                 </Button>
                               )}
+                              {team.registration.utrNumber && (
+                                <span className="text-[9px] text-muted-foreground">UTR: {team.registration.utrNumber}</span>
+                              )}
                             </div>
                           ) : (
                             <span className="text-muted-foreground text-sm">—</span>
