@@ -8,10 +8,10 @@ const getAllTeamsWithRegistrations = async (req, res) => {
     const teams = await prisma.team.findMany({
       include: {
         leader: {
-          select: { name: true, email: true, phone: true }
+          select: { name: true, email: true, phone: true, college: true }
         },
         members: {
-          select: { id: true, name: true, email: true, phone: true, role: true, mealsTaken: true, kitReceived: true }
+          select: { id: true, name: true, email: true, phone: true, college: true, role: true, mealsTaken: true, kitReceived: true }
         },
         registration: true
       },

@@ -3,7 +3,7 @@ import { API } from "@/lib/api";
 import { useAuth } from "@/lib/auth-context";
 import { Navigate } from "react-router-dom";
 import { useState, useMemo } from "react";
-import { Users, ShieldCheck, Mail, Phone, CheckCircle2, Clock, Package, Search, Filter, X } from "lucide-react";
+import { Users, ShieldCheck, Mail, Phone, CheckCircle2, Clock, Package, Search, Filter, X, School } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -70,6 +70,7 @@ export default function AdminDashboard() {
       const matchesSearch = 
         team.teamName.toLowerCase().includes(query) ||
         team.leader.name.toLowerCase().includes(query) ||
+        team.leader.college.toLowerCase().includes(query) ||
         (team.registration?.utrNumber && team.registration.utrNumber.toLowerCase().includes(query));
       
       // Payment Filter
@@ -113,7 +114,7 @@ export default function AdminDashboard() {
             <div className="md:col-span-2 relative group">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
               <Input
-                placeholder="Search team, leader or UTR..."
+                placeholder="Search team, leader, college or UTR..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10 h-11 bg-white/5 border-white/10 focus:border-primary/50 transition-all rounded-xl"
@@ -189,8 +190,9 @@ export default function AdminDashboard() {
               <TableHeader className="bg-muted/50">
                 <TableRow>
                   <TableHead className="w-[200px]">Team Name</TableHead>
-                  <TableHead>Leader</TableHead>
-                  <TableHead>Phone</TableHead>
+                   <TableHead>Leader</TableHead>
+                   <TableHead>College</TableHead>
+                   <TableHead>Phone</TableHead>
                   <TableHead>Members</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Domain</TableHead>
@@ -209,18 +211,26 @@ export default function AdminDashboard() {
                       <span className="text-[10px] text-muted-foreground uppercase mt-1">ID: {team.id.substring(0,8)}...</span>
                     </div>
                   </TableCell>
-                  <TableCell>
-                    <div className="flex flex-col gap-1">
-                      <div className="flex items-center gap-2 text-sm">
-                        <Users className="h-3 w-3 text-muted-foreground" />
-                        {team.leader.name}
-                      </div>
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <Mail className="h-3 w-3" />
-                        {team.leader.email}
-                      </div>
-                    </div>
-                  </TableCell>
+                   <TableCell>
+                     <div className="flex flex-col gap-1">
+                       <div className="flex items-center gap-2 text-sm">
+                         <Users className="h-3 w-3 text-muted-foreground" />
+                         {team.leader.name}
+                       </div>
+                       <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                         <Mail className="h-3 w-3" />
+                         {team.leader.email}
+                       </div>
+                     </div>
+                   </TableCell>
+                   <TableCell>
+                     <div className="flex items-center gap-2 text-sm">
+                       <School className="h-3 w-3 text-muted-foreground" />
+                       <span className="truncate max-w-[150px]" title={team.leader.college}>
+                         {team.leader.college}
+                       </span>
+                     </div>
+                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2 text-sm">
                       <Phone className="h-3 w-3 text-muted-foreground" />
