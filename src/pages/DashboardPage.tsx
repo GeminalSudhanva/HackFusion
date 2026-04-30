@@ -139,6 +139,29 @@ export default function DashboardPage() {
           Dashboard
         </motion.h1>
 
+        {/* REGISTRATION CLOSED ALERT */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="relative group overflow-hidden mb-6"
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 via-orange-500/5 to-red-500/10 opacity-50 group-hover:opacity-70 transition-opacity" />
+          <div className="relative glass-card border-red-500/30 p-4 flex items-center gap-4">
+            <div className="h-10 w-10 rounded-full bg-red-500/20 flex items-center justify-center animate-pulse">
+              <AlertCircle className="h-6 w-6 text-red-500" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                Web Development Registrations Closed
+                <span className="text-[10px] bg-red-500 px-1.5 py-0.5 rounded uppercase tracking-tighter">Capacity Full</span>
+              </h3>
+              <p className="text-xs text-gray-400 mt-1">
+                Fullstack registrations have reached maximum limit. New teams please register under the <strong className="text-primary italic font-bold">AI / ML</strong> domain to participate.
+              </p>
+            </div>
+          </div>
+        </motion.div>
+
         {/* Registration Workflow Instructions */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}

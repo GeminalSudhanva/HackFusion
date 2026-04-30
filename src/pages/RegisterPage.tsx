@@ -22,7 +22,7 @@ function Particle({ style }: { style: React.CSSProperties }) {
 
 const DOMAINS = [
   { value: "AI/ML", label: "AI / ML", icon: Brain, desc: "Build intelligent systems with ML, NLP & Computer Vision", gradient: "from-cyan-500/15 to-blue-500/5", border: "border-cyan-500/30", accent: "text-cyan-400" },
-  { value: "Full Stack Development", label: "Full Stack Development", icon: Layers, desc: "Design & ship end-to-end web applications", gradient: "from-purple-500/15 to-pink-500/5", border: "border-purple-500/30", accent: "text-purple-400" },
+  { value: "Full Stack Development", label: "Full Stack Development", icon: Layers, desc: "Design & ship end-to-end web applications", gradient: "from-purple-500/15 to-pink-500/5", border: "border-purple-500/30", accent: "text-purple-400", closed: true },
 ] as const;
 
 export default function RegisterPage() {
@@ -191,10 +191,14 @@ export default function RegisterPage() {
                     whileTap={{ scale: 0.98 }}
                     transition={{ type: "spring", stiffness: 300, damping: 22 }}
                     onClick={() => {
+                      if ((d as any).closed) {
+                        toast({ title: "Registration Closed", description: "This domain has reached its maximum capacity.", variant: "destructive" });
+                        return;
+                      }
                       setSelectedDomain(d.value);
                       setStep(2);
                     }}
-                    disabled={step > 1 && selectedDomain !== d.value}
+                    disabled={(step > 1 && selectedDomain !== d.value) || ((d as any).closed && selectedDomain !== d.value)}
                     className={`relative flex flex-col items-start gap-3 p-5 rounded-2xl border transition-all text-left overflow-hidden group ${selectedDomain === d.value
                         ? `bg-gradient-to-br ${d.gradient} ${d.border} shadow-[0_0_30px_-10px_rgba(0,255,255,0.3)]`
                         : "border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/8"
@@ -205,8 +209,15 @@ export default function RegisterPage() {
                       <d.icon className={`h-6 w-6 ${selectedDomain === d.value ? d.accent : "text-gray-400 group-hover:text-white"} transition-colors`} />
                     </div>
                     <div>
-                      <span className={`text-sm font-bold block mb-1 ${selectedDomain === d.value ? "text-white" : "text-gray-200"}`}>{d.label}</span>
-                      <span className="text-xs text-gray-400 leading-relaxed">{d.desc}</span>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className={`text-sm font-bold block ${selectedDomain === d.value ? "text-white" : "text-gray-200"}`}>{d.label}</span>
+                        {(d as any).closed && (
+                          <span className="text-[10px] bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded-md font-bold border border-red-500/20">FULL</span>
+                        )}
+                      </div>
+                      <span className="text-xs text-gray-400 leading-relaxed">
+                        {(d as any).closed ? "Registrations for this domain are now closed." : d.desc}
+                      </span>
                     </div>
                     {selectedDomain === d.value && (
                       <motion.div
