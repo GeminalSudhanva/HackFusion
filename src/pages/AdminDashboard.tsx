@@ -39,6 +39,7 @@ export default function AdminDashboard() {
   const [searchQuery, setSearchQuery] = useState("");
   const [paymentFilter, setPaymentFilter] = useState("all");
   const [kitFilter, setKitFilter] = useState("all");
+  const [domainFilter, setDomainFilter] = useState("all");
 
   const { data: teams, isLoading, error } = useQuery({
     queryKey: ["admin-teams"],
@@ -71,7 +72,15 @@ export default function AdminDashboard() {
     if (!teams) return [];
     
     return teams.filter((team: any) => {
-      // Search by team name, leader name, or UTR number
+      // 1. Requirement: Only registered and pending teams must be viewed
+      // This means teams without a registration object are hidden.
+      if (!team.registration) return false;
+      
+      const regStatus = team.registration.status?.toLowerCase();
+      const isAllowedStatus = regStatus === 'registered' || regStatus === 'pending';
+      if (!isAllowedStatus) return false;
+
+      // 2. Search by team name, leader name, or UTR number
       const query = searchQuery.toLowerCase();
       const matchesSearch = 
         team.teamName.toLowerCase().includes(query) ||
@@ -79,19 +88,25 @@ export default function AdminDashboard() {
         team.leader.college.toLowerCase().includes(query) ||
         (team.registration?.utrNumber && team.registration.utrNumber.toLowerCase().includes(query));
       
-      // Payment Filter
+      // 3. Payment Filter
       const status = team.registration?.paymentStatus || 'pending';
       const matchesPayment = paymentFilter === "all" || status === paymentFilter;
       
-      // Kit Filter
+      // 4. Kit Filter
       const allKitsReceived = team.members.length > 0 && team.members.every((m: any) => m.kitReceived === true);
       const matchesKit = kitFilter === "all" || 
         (kitFilter === "received" && allKitsReceived) ||
         (kitFilter === "pending" && !allKitsReceived);
         
-      return matchesSearch && matchesPayment && matchesKit;
+      // 5. Domain Filter
+      const domain = team.registration?.domain;
+      const matchesDomain = domainFilter === "all" || 
+        (domainFilter === "fullstack" && domain === "Full Stack Development") ||
+        (domainFilter === "aiml" && domain === "AI/ML");
+
+      return matchesSearch && matchesPayment && matchesKit && matchesDomain;
     });
-  }, [teams, searchQuery, paymentFilter, kitFilter]);
+  }, [teams, searchQuery, paymentFilter, kitFilter, domainFilter]);
 
   if (loading) return <div className="pt-24 text-center">Checking authorization...</div>;
   if (!user || user.role !== "admin") return <Navigate to="/dashboard" replace />;
@@ -115,7 +130,7 @@ export default function AdminDashboard() {
       ) : (
         <div className="space-y-6">
           {/* Controls Bar */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             {/* Search */}
             <div className="md:col-span-2 relative group">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
@@ -168,6 +183,23 @@ export default function AdminDashboard() {
                 </SelectContent>
               </Select>
             </div>
+            
+            {/* Domain Filter */}
+            <div className="flex flex-col gap-1.5">
+              <Select value={domainFilter} onValueChange={setDomainFilter}>
+                <SelectTrigger className="h-11 bg-white/5 border-white/10 rounded-xl focus:ring-primary/50">
+                  <div className="flex items-center gap-2">
+                    <Filter className="h-3.5 w-3.5 text-muted-foreground" />
+                    <SelectValue placeholder="Domain" />
+                  </div>
+                </SelectTrigger>
+                <SelectContent className="bg-background/95 backdrop-blur-xl border-white/10">
+                  <SelectItem value="all">All Domains</SelectItem>
+                  <SelectItem value="fullstack">Fullstack</SelectItem>
+                  <SelectItem value="aiml">AI/ML</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <Tabs defaultValue="overview" className="w-full">
@@ -188,7 +220,7 @@ export default function AdminDashboard() {
                  <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest">
                     Showing {filteredTeams.length} {filteredTeams.length === 1 ? 'Team' : 'Teams'}
                  </p>
-                 {(searchQuery || paymentFilter !== "all" || kitFilter !== "all") && (
+                 {(searchQuery || paymentFilter !== "all" || kitFilter !== "all" || domainFilter !== "all") && (
                    <Button 
                     variant="ghost" 
                     size="sm" 
@@ -196,6 +228,7 @@ export default function AdminDashboard() {
                       setSearchQuery("");
                       setPaymentFilter("all");
                       setKitFilter("all");
+                      setDomainFilter("all");
                     }}
                     className="h-7 text-[10px] text-primary hover:text-primary hover:bg-primary/10"
                    >
@@ -541,6 +574,7 @@ export default function AdminDashboard() {
                   setSearchQuery("");
                   setPaymentFilter("all");
                   setKitFilter("all");
+                  setDomainFilter("all");
                 }}
                 className="mt-6 font-bold"
               >
