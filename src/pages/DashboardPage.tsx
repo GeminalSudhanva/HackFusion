@@ -139,6 +139,29 @@ export default function DashboardPage() {
           Dashboard
         </motion.h1>
 
+        {/* Registration Closed Notice */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="relative overflow-hidden p-6 rounded-2xl border border-red-500/20 bg-red-500/5 backdrop-blur-sm"
+        >
+          <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
+            <AlertCircle className="w-16 h-16 text-red-500" />
+          </div>
+          <div className="flex items-start gap-4">
+            <div className="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center shrink-0 border border-red-500/30">
+              <AlertCircle className="w-6 h-6 text-red-500" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-red-500 mb-1">Registrations are now CLOSED</h3>
+              <p className="text-sm text-gray-400 max-w-2xl leading-relaxed">
+                Thank you for the overwhelming response! HackFusion 2.0 registrations for both <strong className="text-white">AI/ML</strong> and <strong className="text-white">Full Stack</strong> domains have reached maximum capacity. 
+                If you have already registered and paid, please wait for verification.
+              </p>
+            </div>
+          </div>
+        </motion.div>
+
 
         {/* Registration Workflow Instructions */}
         <motion.div

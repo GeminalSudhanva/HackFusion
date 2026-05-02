@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
-import { Zap, Navigation, Clock } from "lucide-react";
+import { Zap, Navigation, Clock, AlertCircle } from "lucide-react";
 import heroBg from "@/assets/hero-bg.jpg";
 
 const HACKATHON_DATE = new Date("2026-05-05T09:00:00");
@@ -141,6 +141,22 @@ export function HeroSection({ onRegisterClick }: { onRegisterClick?: () => void 
               <p className="text-[10px] md:text-xs text-primary mt-1.5 uppercase tracking-[0.2em] font-bold">{item.label}</p>
             </motion.div>
           ))}
+        </motion.div>
+
+        {/* Registration Closed Alert */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          className="max-w-md mx-auto mb-8 p-4 rounded-xl border border-red-500/30 bg-red-500/10 backdrop-blur-md flex items-center gap-3 text-left"
+        >
+          <div className="w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center shrink-0">
+            <AlertCircle className="w-5 h-5 text-red-500" />
+          </div>
+          <div>
+            <h4 className="text-sm font-bold text-red-500 uppercase tracking-wider">Registration Closed</h4>
+            <p className="text-[11px] text-gray-300 leading-tight">All domains (AI/ML & Fullstack) have reached maximum capacity.</p>
+          </div>
         </motion.div>
 
         {/* CTAs */}

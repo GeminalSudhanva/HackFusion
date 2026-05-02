@@ -21,8 +21,8 @@ function Particle({ style }: { style: React.CSSProperties }) {
 }
 
 const DOMAINS = [
-  { value: "AI/ML", label: "AI / ML", icon: Brain, desc: "Build intelligent systems with ML, NLP & Computer Vision", gradient: "from-cyan-500/15 to-blue-500/5", border: "border-cyan-500/30", accent: "text-cyan-400" },
-  { value: "Full Stack Development", label: "Full Stack Development", icon: Layers, desc: "Design & ship end-to-end web applications", gradient: "from-purple-500/15 to-pink-500/5", border: "border-purple-500/30", accent: "text-purple-400" },
+  { value: "AI/ML", label: "AI / ML", icon: Brain, desc: "Build intelligent systems with ML, NLP & Computer Vision", gradient: "from-cyan-500/15 to-blue-500/5", border: "border-cyan-500/30", accent: "text-cyan-400", closed: true },
+  { value: "Full Stack Development", label: "Full Stack Development", icon: Layers, desc: "Design & ship end-to-end web applications", gradient: "from-purple-500/15 to-pink-500/5", border: "border-purple-500/30", accent: "text-purple-400", closed: true },
 ] as const;
 
 export default function RegisterPage() {
