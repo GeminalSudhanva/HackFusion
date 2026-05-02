@@ -191,11 +191,14 @@ export default function RegisterPage() {
                     whileTap={{ scale: 0.98 }}
                     transition={{ type: "spring", stiffness: 300, damping: 22 }}
                     onClick={() => {
-                      // Temporarily allowing registration even if closed
+                      if ((d as any).closed) {
+                        toast({ title: "Registration Closed", description: "This domain has reached its maximum capacity.", variant: "destructive" });
+                        return;
+                      }
                       setSelectedDomain(d.value);
                       setStep(2);
                     }}
-                    disabled={(step > 1 && selectedDomain !== d.value)}
+                    disabled={(step > 1 && selectedDomain !== d.value) || ((d as any).closed && selectedDomain !== d.value)}
                     className={`relative flex flex-col items-start gap-3 p-5 rounded-2xl border transition-all text-left overflow-hidden group ${selectedDomain === d.value
                         ? `bg-gradient-to-br ${d.gradient} ${d.border} shadow-[0_0_30px_-10px_rgba(0,255,255,0.3)]`
                         : "border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/8"
