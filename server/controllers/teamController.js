@@ -316,7 +316,7 @@ const rollDice = async (req, res) => {
     const domain = team.registration.domain;
 
     // 2. Find available numbers (1-15) for this domain
-    // A number is available if it has been assigned < 2 times in the SAME domain
+    // A number is available if it has been assigned < 4 times in the SAME domain
     const assignedTeams = await prisma.team.findMany({
       where: {
         registration: { domain: domain },
@@ -332,7 +332,7 @@ const rollDice = async (req, res) => {
 
     const availableNumbers = [];
     for (let i = 1; i <= 15; i++) {
-      if ((frequencyMap[i] || 0) < 2) {
+      if ((frequencyMap[i] || 0) < 4) {
         availableNumbers.push(i);
       }
     }
