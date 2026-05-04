@@ -50,6 +50,8 @@ model Registration {
   amount        Float    @default(800)
   paymentStatus String   @default("pending")
   status        String   @default("registered")
+  teamName      String?
+  teamLeader    String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
