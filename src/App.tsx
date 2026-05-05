@@ -17,6 +17,8 @@ import AboutPage from "./pages/AboutPage";
 import EventPage from "./pages/EventPage";
 import AccommodationPage from "./pages/AccommodationPage";
 import CoordinatorsPage from "./pages/CoordinatorsPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -42,6 +44,8 @@ const App = () => (
             <Route path="/event" element={<EventPage />} />
             <Route path="/accommodation" element={<AccommodationPage />} />
             <Route path="/coordinators" element={<CoordinatorsPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

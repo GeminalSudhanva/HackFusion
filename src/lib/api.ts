@@ -28,6 +28,24 @@ export const API = {
     if (!res.ok) throw new Error((await res.json()).message || 'Login failed');
     return res.json();
   },
+  forgotPassword: async (email: string) => {
+    const res = await fetch(`${BASE_URL}/auth/forgot-password`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify({ email }),
+    });
+    if (!res.ok) throw new Error((await res.json()).message || 'Failed to send reset link');
+    return res.json();
+  },
+  resetPassword: async (data: any) => {
+    const res = await fetch(`${BASE_URL}/auth/reset-password`, {
+      method: 'POST',
+      headers: getHeaders(),
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error((await res.json()).message || 'Failed to reset password');
+    return res.json();
+  },
 
   // --- Team Management ---
   createTeam: async (data: any) => {

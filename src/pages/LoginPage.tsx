@@ -146,6 +146,14 @@ export default function LoginPage() {
                     className="bg-white/5 border-white/10 focus:border-primary/50 h-12 rounded-xl pl-4 text-sm placeholder:text-gray-500 transition-all"
                   />
                 </div>
+                <div className="flex justify-end mt-1">
+                  <Link
+                    to="/forgot-password"
+                    className="text-xs text-primary/80 hover:text-primary transition-colors font-medium"
+                  >
+                    Forgot password?
+                  </Link>
+                </div>
               </div>
 
               <Button
